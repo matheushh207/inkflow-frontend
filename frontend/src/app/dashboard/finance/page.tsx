@@ -62,7 +62,7 @@ export default function FinancePage() {
         <div className="space-y-6 animate-premium-fade w-full overflow-x-hidden">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                 <div>
-                    <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Gestão Financeira</h1>
+                    <h1 className="text-2xl sm:text-2xl lg:text-3xl font-black text-white tracking-tighter uppercase italic">Gestão Financeira</h1>
                     <p className="text-secondary-text text-sm font-medium">Controle de caixa e comissões do estúdio.</p>
                 </div>
                 <button

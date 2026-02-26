@@ -49,7 +49,7 @@ export default function DashboardPage() {
         <div className="space-y-6 md:space-y-8 animate-premium-fade w-full overflow-x-hidden">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tighter uppercase italic">Visão Geral</h1>
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tighter uppercase italic">Visão Geral</h1>
                     <p className="text-secondary-text text-sm sm:text-base mt-2">Gestão centralizada do seu estúdio em tempo real.</p>
                 </div>
                 <div className="p-3 bg-premium-card border-gold-polished/20 flex items-center gap-3">

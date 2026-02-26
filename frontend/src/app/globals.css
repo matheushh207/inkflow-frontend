@@ -13,20 +13,20 @@
 }
 
 html {
-  font-size: 14px;
-  /* Base reduced further to make typography less oversized on mobile */
+  font-size: 13px;
+  /* Base reduced to make typography compact */
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 
 @media (min-width: 1440px) {
   html {
-    font-size: 17px;
-    /* Slight scale up for large screens */
+    font-size: 15px;
+    /* Slightly larger for large screens but not oversized */
   }
 }
 
