@@ -13,8 +13,8 @@
 }
 
 html {
-  font-size: 15px;
-  /* Base (smaller to avoid oversized typography) */
+  font-size: 14px;
+  /* Base reduced further to make typography less oversized on mobile */
 }
 
 @media (min-width: 768px) {

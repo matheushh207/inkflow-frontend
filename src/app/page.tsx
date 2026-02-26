@@ -39,6 +39,8 @@ function CheckCircleCustom({ className, ...props }: React.SVGProps<SVGSVGElement
 }
 
 export default function LandingPage() {
+    const showDemo = process.env.NEXT_PUBLIC_SHOW_DEMO === 'true';
+
     return (
         <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-gold-polished selection:text-black">
             {/* NAVIGATION */}
@@ -85,11 +87,11 @@ export default function LandingPage() {
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">A revolução na gestão já começou</span>
                         </div>
 
-                        <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] max-w-5xl mx-auto uppercase">
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[0.9] max-w-5xl mx-auto uppercase">
                             Transforme a <span className="text-gold-polished italic">Gestão</span> do seu estúdio de tatuagem.
                         </h1>
 
-                        <p className="text-xl md:text-2xl text-secondary-text max-w-3xl mx-auto mb-12 font-medium">
+                        <p className="text-base sm:text-lg md:text-xl text-secondary-text max-w-3xl mx-auto mb-12 font-medium">
                             O sistema mais completo do Brasil. Gerencie agendamentos, orçamentos, estoque e finanças em uma única plataforma premium.
                         </p>
 
@@ -154,12 +156,13 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* DEMO SECTION */}
+                {/* DEMO SECTION (only if enabled via env) */}
+                {showDemo && (
                 <section id="demonstracao" className="py-24 relative overflow-hidden">
                     <div className="max-w-[1400px] mx-auto px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4">Visualize o Fluxo Completo</h2>
-                            <p className="text-secondary-text text-lg max-w-2xl mx-auto">Explore como cada funcionalidade funciona do início ao fim com nossa interface intuitiva.</p>
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-4">Visualize o Fluxo Completo</h2>
+                            <p className="text-base sm:text-lg text-secondary-text max-w-2xl mx-auto">Explore como cada funcionalidade funciona do início ao fim com nossa interface intuitiva.</p>
                         </div>
 
                         <div className="relative group">
@@ -170,6 +173,7 @@ export default function LandingPage() {
                         </div>
                     </div>
                 </section>
+                )}
 
                 {/* CTA SECTION */}
                 <section className="py-24 relative overflow-hidden">
