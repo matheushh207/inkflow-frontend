@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0A0A0A;
+  --foreground: #FFFFFF;
+  --accent-primary: #FFD700;
+  --accent-primary-rgb: 255 215 0;
+  --accent-secondary: rgba(var(--accent-primary-rgb), 0.2);
+  --premium-border: rgba(255, 255, 255, 0.1);
+  --secondary-text: #A1A1AA;
+}
+
+html {
+  font-size: 15px;
+  /* Base (smaller to avoid oversized typography) */
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1440px) {
+  html {
+    font-size: 17px;
+    /* Slight scale up for large screens */
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components {
+  .btn-premium {
+    @apply bg-gold-polished text-black font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-all;
+    box-shadow: 0 0 20px var(--accent-secondary);
+  }
+
+  .premium-card {
+    @apply bg-[#151515] border border-premium-border rounded-2xl p-6 transition-all;
+  }
+
+  .premium-card:hover {
+    @apply border-gold-polished/30;
+  }
+
+  .header-premium {
+    @apply text-white tracking-tight;
+  }
+
+  .stipple-bg {
+    background-image: radial-gradient(circle, var(--accent-primary) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Premium Logo Enhancement */
+  .logo-alpha {
+    filter:
+      contrast(1.2) brightness(1.1) drop-shadow(0 0 15px var(--accent-secondary)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .logo-alpha:hover {
+    filter:
+      contrast(1.3) brightness(1.2) drop-shadow(0 0 25px var(--accent-secondary)) drop-shadow(0 6px 8px rgba(0, 0, 0, 0.6));
+  }
+}
+
+/* Global Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-secondary);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: var(--accent-secondary);
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+  box-shadow: 0 0 10px var(--accent-secondary);
+}
+
+/* Hide scrollbar buttons (arrows) to keep it clean */
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* Firefox compatibility */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-primary) transparent;
+}
+
+/* Standardizing numeric and date inputs (removing default white arrows/spinners) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.animate-premium-fade {
+  animation: premium-fade 0.5s ease-out;
+}
+
+@keyframes premium-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
