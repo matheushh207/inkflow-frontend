@@ -15,10 +15,12 @@ import { useState, useEffect, useRef } from 'react';
 import { useStore } from '@/context/StoreContext';
 import { io, Socket } from 'socket.io-client';
 
+// determine WebSocket URL, with sensible fallbacks and a warning
 const WS_URL =
     (process.env.NEXT_PUBLIC_WS_URL ||
         process.env.NEXT_PUBLIC_API_URL ||
-        'http://localhost:3000').replace(/\/$/, '');
+        (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'))
+        .replace(/\/$/, '');
 
 export default function ChatPage() {
     const { clients, appointments, studioName } = useStore();
@@ -45,6 +47,10 @@ export default function ChatPage() {
         });
 
         socketRef.current.on('connect', () => console.log('Socket connected'));
+        socketRef.current.on('connect_error', (err) => {
+            console.error('Socket connect error', err);
+            setConnectionStatus('DISCONNECTED');
+        });
         socketRef.current.on('qr', (qr: string) => {
             setQrCode(qr);
             setConnectionStatus('AWAITING_SCAN');
@@ -330,12 +336,21 @@ export default function ChatPage() {
                     </>
                 ) : (
                     <div className="flex-1 flex flex-col items-center justify-center p-12 text-center bg-[#050505]">
-                        {connectionStatus !== 'READY' && connectionStatus !== 'AUTHENTICATED' ? (
+                        {connectionStatus === 'DISCONNECTED' ? (
+                        <div className="space-y-4 max-w-sm text-center">
+                            <p className="text-sm font-bold text-rose-500">Erro de conexão ao servidor de chat.</p>
+                            <p className="text-xs text-zinc-400">
+                                Verifique se a variável de ambiente <code>NEXT_PUBLIC_WS_URL</code> ou <code>NEXT_PUBLIC_API_URL</code> está definida corretamente e se o backend está acessível.
+                            </p>
+                        </div>
+                    ) : connectionStatus !== 'READY' && connectionStatus !== 'AUTHENTICATED' ? (
                             <div className="space-y-8 max-w-sm animate-premium-fade">
                                 {qrCode ? (
                                     <div className="space-y-6">
                                         <div className="bg-white p-6 rounded-3xl shadow-[0_0_50px_rgba(255,255,255,0.05)]">
-                                            <img src={qrCode} alt="WhatsApp QR" className="w-56 h-56 mx-auto" />
+                                            <a href={qrCode} target="_blank" rel="noopener noreferrer">
+                                                <img src={qrCode} alt="WhatsApp QR" className="w-56 h-56 mx-auto" />
+                                            </a>
                                         </div>
                                         <div className="space-y-2">
                                             <h2 className="text-xl font-black text-white uppercase italic tracking-tighter">Escaneie o QR Code</h2>
