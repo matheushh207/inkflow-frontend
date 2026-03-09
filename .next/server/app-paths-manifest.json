@@ -1,0 +1,22 @@
+{
+  "/_not-found": "app/_not-found.js",
+  "/confirm-appointment/page": "app/confirm-appointment/page.js",
+  "/confirm-budget/page": "app/confirm-budget/page.js",
+  "/page": "app/page.js",
+  "/login/page": "app/login/page.js",
+  "/register/page": "app/register/page.js",
+  "/reserva/page": "app/reserva/page.js",
+  "/dashboard/agenda/page": "app/dashboard/agenda/page.js",
+  "/dashboard/consent/page": "app/dashboard/consent/page.js",
+  "/dashboard/anamnesis/page": "app/dashboard/anamnesis/page.js",
+  "/dashboard/clients/[id]/page": "app/dashboard/clients/[id]/page.js",
+  "/dashboard/appointments/page": "app/dashboard/appointments/page.js",
+  "/dashboard/finance/page": "app/dashboard/finance/page.js",
+  "/dashboard/settings/page": "app/dashboard/settings/page.js",
+  "/dashboard/clients/page": "app/dashboard/clients/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/portfolio/page": "app/dashboard/portfolio/page.js",
+  "/dashboard/budgets/page": "app/dashboard/budgets/page.js",
+  "/dashboard/users/page": "app/dashboard/users/page.js",
+  "/dashboard/inventory/page": "app/dashboard/inventory/page.js"
+}
