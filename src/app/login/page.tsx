@@ -7,13 +7,32 @@ import Link from 'next/link';
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate login
-        setTimeout(() => {
-            window.location.href = '/dashboard';
-        }, 1500);
+        try {
+            const response = await fetch('http://localhost:3001/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Salva o token no cookie para o middleware
+                document.cookie = `auth_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
+                window.location.href = '/dashboard';
+            } else {
+                alert('Credenciais inválidas. Tente novamente.');
+            }
+        } catch (error) {
+            alert('Erro ao conectar com o servidor.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -41,6 +60,8 @@ export default function LoginPage() {
                                 <input
                                     type="email"
                                     placeholder="admin@estudio.com"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
                                     className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 pl-12 text-sm text-white outline-none focus:border-gold-polished transition-all"
                                     required
                                 />
@@ -57,6 +78,8 @@ export default function LoginPage() {
                                 <input
                                     type="password"
                                     placeholder="••••••••"
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
                                     className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 pl-12 text-sm text-white outline-none focus:border-gold-polished transition-all"
                                     required
                                 />

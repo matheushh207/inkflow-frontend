@@ -5,9 +5,15 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get('auth_token')?.value;
     const { pathname } = request.nextUrl;
 
-    // 1. Allow public routes
-    const publicPaths = ['/login', '/register', '/api/auth'];
-    if (publicPaths.some(path => pathname.startsWith(path))) {
+    // 1. Allow public routes (Landing Page, Login, Register, Reserva)
+    const publicPaths = ['/', '/login', '/register', '/reserva', '/api/auth'];
+    
+    // Check for exact root or other public paths
+    const isPublicPath = publicPaths.some(path => 
+        pathname === path || pathname.startsWith(path + '/')
+    );
+
+    if (isPublicPath) {
         return NextResponse.next();
     }
 
