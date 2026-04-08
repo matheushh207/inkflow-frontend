@@ -307,7 +307,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setState(prev => ({ ...prev, appointments: [newApp, ...prev.appointments] }));
 
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/appointments`, {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            await fetch(`${baseUrl}/appointments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -360,8 +361,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         try {
             // Find client email if possible
             const client = state.clients.find(c => c.id === budget.clientId);
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
 
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/budgets`, {
+            await fetch(`${baseUrl}/budgets`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -559,8 +561,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         // But I'll add the API call structure for clarity
         try {
             const tenantId = '123'; // Mock tenant ID
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/tenants/${tenantId}/smtp`, {
-                method: 'PATCH',
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            await fetch(`${baseUrl}/tenants/${tenantId}/smtp`, {
+                method: 'POST', // Changed to POST to match common implementation if PATCH fails
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(settings)
             });
