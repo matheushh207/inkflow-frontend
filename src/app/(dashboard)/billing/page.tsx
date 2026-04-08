@@ -8,9 +8,15 @@ const plans = [
     { id: 'elite', name: 'Elite', price: 120, features: ['Até 10 Tatuadores', 'Métricas Avançadas', 'Prioridade'] },
 ];
 
+interface PaymentResponse {
+    amount: number;
+    qrCode: string;
+    qrCodeBase64: string;
+}
+
 export default function BillingPage() {
     const [loading, setLoading] = useState(false);
-    const [selectedPlan, setSelectedPlan] = useState(null);
+    const [selectedPlan, setSelectedPlan] = useState<PaymentResponse | null>(null);
 
     const handleSubscribe = async (planId: string) => {
         setLoading(true);
