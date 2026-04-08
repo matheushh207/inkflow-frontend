@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { LogIn, ShieldCheck, Mail, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -44,10 +45,13 @@ export default function LoginPage() {
 
             <div className="w-full max-w-md animate-premium-fade relative z-10">
                 <div className="text-center mb-10">
-                    <img
+                    <Image
                         src="/logo.png"
                         alt="INK FLOW"
-                        className="h-64 w-auto mx-auto mb-8 logo-alpha transition-transform hover:scale-105"
+                        width={250}
+                        height={80}
+                        className="h-auto w-auto mx-auto mb-8 logo-alpha transition-transform hover:scale-105"
+                        priority
                     />
                 </div>
 
