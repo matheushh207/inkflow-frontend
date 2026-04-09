@@ -238,6 +238,7 @@ export default function SettingsPage() {
                                                 placeholder="(11) 99999-9999"
                                             />
                                         </div>
+                                        <div className="sm:col-span-2 space-y-2">
                                             <label className="text-xs font-black text-secondary-text uppercase tracking-widest ml-1">E-mail para Contato</label>
                                             <input
                                                 type="email"
