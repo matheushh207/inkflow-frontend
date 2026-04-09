@@ -180,10 +180,11 @@ export default function LandingPage() {
                                         muted 
                                         loop 
                                         playsInline
+                                        poster="https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?q=80&w=1200&auto=format&fit=crop"
                                         className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700"
                                     >
-                                        <source src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-38390-large.mp4" type="video/mp4" />
-                                        Seu navegador não suporta vídeos.
+                                        <source src="https://player.vimeo.com/external/494252666.sd.mp4?s=72ad573458853e51ff65d0f6224e75d713f04400&profile_id=164&oauth2_token_id=57447761" type="video/mp4" />
+                                        Seu navegador no suporta vdeos.
                                     </video>
                                     
                                     {/* Play Overlay */}
