@@ -17,6 +17,7 @@ import {
 export default function RegisterPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
+        name: '',
         studioName: '',
         email: '',
         phone: '',
