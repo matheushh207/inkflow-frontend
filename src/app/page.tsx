@@ -74,7 +74,32 @@ export default function LandingPage() {
                 </div>
             </nav>
 
-            <main className="pt-20">
+                {/* HERO SECTION */}
+                <section className="relative py-24 lg:py-40 overflow-hidden">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full stipple-bg opacity-20 pointer-events-none" />
+                    <div className="absolute -top-24 -left-24 w-96 h-96 bg-gold-polished/5 rounded-full blur-[120px] pointer-events-none" />
+                    <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+                    <div className="max-w-[1400px] mx-auto px-6 relative z-10 text-center">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full mb-8 animate-premium-fade text-gold-polished font-black text-[10px] uppercase tracking-widest">
+                            <span className="w-2 h-2 rounded-full bg-gold-polished animate-pulse" />
+                            A revolução na gestão de estúdios
+                        </div>
+
+                        <h1 className="text-5xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.85] max-w-5xl mx-auto uppercase italic">
+                            O Futuro da <span className="text-gold-polished">Tatuagem</span> é Digital.
+                        </h1>
+
+                        <p className="text-lg md:text-xl text-secondary-text max-w-3xl mx-auto mb-12 font-medium">
+                            Gerencie agendamentos, orçamentos e finanças com a plataforma mais premium do mercado.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                            <Link href="/register" className="btn-premium px-10 py-5 text-lg w-full sm:w-auto flex items-center justify-center gap-3 group">
+                                TESTE GRÁTIS POR 5 DIAS
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </div>
                     </div>
                 </section>
 
