@@ -76,7 +76,7 @@ export default function LoginPage() {
                         <div className="space-y-2">
                             <div className="flex justify-between items-center ml-1">
                                 <label className="text-[10px] font-black text-secondary-text uppercase tracking-widest">Senha de Acesso</label>
-                                <Link href="/forgot-password" size="sm" className="text-[10px] font-black text-gold-polished uppercase tracking-widest hover:underline">Esqueci a senha</Link>
+                                <Link href="/forgot-password" className="text-[10px] font-black text-gold-polished uppercase tracking-widest hover:underline">Esqueci a senha</Link>
                             </div>
                             <div className="relative">
                                 <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
