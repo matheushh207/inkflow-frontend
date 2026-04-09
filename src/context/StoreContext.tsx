@@ -144,6 +144,15 @@ interface StoreState {
     };
     currentUserId: string;
     tenantId: string;
+    responsibleName: string;
+    notifications: {
+        id: string;
+        title: string;
+        message: string;
+        time: string;
+        type: 'INFO' | 'SUCCESS' | 'WARNING';
+        read: boolean;
+    }[];
 }
 
 interface StoreContextType extends StoreState {
@@ -198,11 +207,7 @@ const INITIAL_STATE: StoreState = {
             appointmentsCount: 0,
             commission: 0,
             permissions: {
-                agenda: true,
-                financeiro: true,
-                clientes: true,
-                estoque: true,
-                configuracoes: true
+                agenda: true, financeiro: true, clientes: true, estoque: true, configuracoes: true
             }
         },
     ],
@@ -210,10 +215,10 @@ const INITIAL_STATE: StoreState = {
     consentTerms: [],
     consentPrintHistory: [],
     anamnesisPrintHistory: [],
-    studioName: 'Estúdio Ink',
-    studioEmail: 'admin@inkflow.com.br',
-    studioPhone: '(11) 99999-9999',
-    studioCnpj: '00.000.000/0001-00',
+    studioName: 'Carregando...',
+    studioEmail: '',
+    studioPhone: '',
+    studioCnpj: '',
     studioLogo: '/logo.png',
     accentColor: '#FFD700',
     notificationSettings: {
@@ -221,14 +226,14 @@ const INITIAL_STATE: StoreState = {
         push: false
     },
     smtpSettings: {
-        host: '',
-        port: 587,
-        secure: false,
-        user: '',
-        pass: ''
+        host: '', port: 587, secure: false, user: '', pass: ''
     },
     currentUserId: 'admin-1',
-    tenantId: '123' // Mock default
+    tenantId: '123',
+    responsibleName: 'Proprietário',
+    notifications: [
+        { id: '1', title: 'Boas-vindas!', message: 'Seu estúdio InkFlow está pronto. Comece cadastrando sua equipe!', time: 'Agora', type: 'SUCCESS', read: false },
+    ]
 };
 
 // --- CONTEXT ---

@@ -18,7 +18,10 @@ import {
     FileSignature,
     ImageIcon,
     ClipboardList,
-    CreditCard
+    CreditCard,
+    Info,
+    CheckCircle2,
+    AlertTriangle
 } from 'lucide-react';
 import { useStore } from '@/context/StoreContext';
 import { clsx, type ClassValue } from 'clsx';
@@ -52,8 +55,11 @@ export default function DashboardLayout({
 }) {
     const pathname = usePathname();
     const router = useRouter();
-    const { team, currentUserId, setCurrentUser } = useStore();
+    const { team, currentUserId, setCurrentUser, notifications, studioName } = useStore();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+    const unreadCount = notifications.filter(n => !n.read).length;
 
     // Get current user details dynamically
     const currentUser = team.find(m => m.id === currentUserId) || team[0];
@@ -172,10 +178,68 @@ export default function DashboardLayout({
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <button className="p-2 relative text-secondary-text hover:text-gold-polished transition-all">
-                            <Bell className="w-5 h-5" />
-                            <span className="absolute top-2 right-2 w-2 h-2 bg-gold-polished border-2 border-[#0A0A0A] rounded-full" />
-                        </button>
+                        <div className="relative">
+                            <button 
+                                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                                className={cn(
+                                    "p-2 relative transition-all rounded-lg border",
+                                    notificationsOpen ? "bg-gold-polished text-black border-gold-polished" : "text-secondary-text hover:text-gold-polished border-white/5 hover:border-white/10"
+                                )}
+                            >
+                                <Bell className="w-5 h-5" />
+                                {unreadCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 border-2 border-[#0A0A0A] rounded-full text-[8px] font-black flex items-center justify-center text-white">
+                                        {unreadCount}
+                                    </span>
+                                )}
+                            </button>
+
+                            {/* NOTIFICATIONS DROPDOWN */}
+                            {notificationsOpen && (
+                                <>
+                                    <div className="fixed inset-0 z-40" onClick={() => setNotificationsOpen(false)} />
+                                    <div className="absolute right-0 mt-4 w-80 bg-[#0D0D0D] border border-premium-border rounded-2xl shadow-2xl z-50 overflow-hidden animate-premium-pop">
+                                        <div className="p-4 border-b border-premium-border bg-zinc-900/50 flex justify-between items-center">
+                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-gold-polished">Centro de Alertas</h4>
+                                            <span className="text-[9px] font-bold text-zinc-500 uppercase">{unreadCount} Novas</span>
+                                        </div>
+                                        <div className="max-h-[400px] overflow-y-auto">
+                                            {notifications.length > 0 ? (
+                                                notifications.map((n) => (
+                                                    <div key={n.id} className="p-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors cursor-pointer group">
+                                                        <div className="flex gap-3">
+                                                            <div className={cn(
+                                                                "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 border",
+                                                                n.type === 'SUCCESS' ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" :
+                                                                n.type === 'WARNING' ? "bg-rose-500/10 border-rose-500/20 text-rose-500" :
+                                                                "bg-blue-500/10 border-blue-500/20 text-blue-500"
+                                                            )}>
+                                                                {n.type === 'SUCCESS' ? <CheckCircle2 className="w-4 h-4" /> : 
+                                                                 n.type === 'WARNING' ? <AlertTriangle className="w-4 h-4" /> : 
+                                                                 <Info className="w-4 h-4" />}
+                                                            </div>
+                                                            <div className="flex-1 space-y-1">
+                                                                <p className="text-xs font-bold text-white leading-tight">{n.title}</p>
+                                                                <p className="text-[11px] text-zinc-500 leading-relaxed line-clamp-2">{n.message}</p>
+                                                                <p className="text-[9px] font-black text-zinc-700 uppercase tracking-widest pt-1">{n.time}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="p-10 text-center">
+                                                    <Bell className="w-8 h-8 text-zinc-800 mx-auto mb-3 opacity-20" />
+                                                    <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest">Nenhum alerta pendente</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <button className="w-full p-4 text-[10px] font-black text-white hover:text-gold-polished uppercase tracking-widest bg-zinc-900/30 transition-colors">
+                                            Ver Histórico Completo
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </header>
 

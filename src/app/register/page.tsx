@@ -104,6 +104,16 @@ export default function RegisterPage() {
                             onChange={handleChange} 
                         />
                         <InputGroup 
+                            icon={User} 
+                            placeholder="Nome do Responsável..." 
+                            name="name" 
+                            value={formData.name} 
+                            onChange={handleChange} 
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <InputGroup 
                             icon={Mail} 
                             placeholder="E-mail..." 
                             type="email" 
@@ -111,15 +121,14 @@ export default function RegisterPage() {
                             value={formData.email} 
                             onChange={handleChange} 
                         />
+                        <InputGroup 
+                            icon={Phone} 
+                            placeholder="WhatsApp (Ex: 11999999999)" 
+                            name="phone" 
+                            value={formData.phone} 
+                            onChange={handleChange} 
+                        />
                     </div>
-
-                    <InputGroup 
-                        icon={Phone} 
-                        placeholder="WhatsApp (Ex: 11999999999)" 
-                        name="phone" 
-                        value={formData.phone} 
-                        onChange={handleChange} 
-                    />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <InputGroup 

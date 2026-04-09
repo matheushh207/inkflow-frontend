@@ -32,6 +32,7 @@ export default function SettingsPage() {
         studioPhone,
         studioCnpj,
         studioLogo,
+        responsibleName,
         notificationSettings,
         updateStudioInfo,
         smtpSettings,
@@ -54,6 +55,7 @@ export default function SettingsPage() {
         studioCnpj,
         studioPhone,
         studioLogo,
+        responsibleName,
         notifications: { ...notificationSettings },
         smtp: { ...smtpSettings }
     });
@@ -73,10 +75,11 @@ export default function SettingsPage() {
             studioCnpj,
             studioPhone,
             studioLogo,
+            responsibleName,
             notifications: { ...notificationSettings },
             smtp: { ...smtpSettings }
         });
-    }, [studioName, studioEmail, studioCnpj, studioPhone, studioLogo, notificationSettings, smtpSettings]);
+    }, [studioName, studioEmail, studioCnpj, studioPhone, studioLogo, responsibleName, notificationSettings, smtpSettings]);
 
     const handleSave = () => {
         setIsSaving(true);
@@ -86,6 +89,7 @@ export default function SettingsPage() {
             studioCnpj: localSettings.studioCnpj,
             studioPhone: localSettings.studioPhone,
             studioLogo: localSettings.studioLogo,
+            responsibleName: localSettings.responsibleName,
             notificationSettings: localSettings.notifications
         });
 
@@ -234,14 +238,23 @@ export default function SettingsPage() {
                                                 placeholder="(11) 99999-9999"
                                             />
                                         </div>
-                                        <div className="sm:col-span-2 space-y-2">
                                             <label className="text-xs font-black text-secondary-text uppercase tracking-widest ml-1">E-mail para Contato</label>
                                             <input
                                                 type="email"
                                                 value={localSettings.studioEmail}
                                                 onChange={(e) => setLocalSettings({ ...localSettings, studioEmail: e.target.value })}
                                                 className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 text-base text-white focus:border-gold-polished transition-all outline-none"
-                                                placeholder="contato@estudio.com"
+                                                placeholder="Seu e-mail de contato"
+                                            />
+                                        </div>
+                                        <div className="sm:col-span-2 space-y-2">
+                                            <label className="text-xs font-black text-secondary-text uppercase tracking-widest ml-1">Nome do Responsável / Contratante</label>
+                                            <input
+                                                type="text"
+                                                value={localSettings.responsibleName}
+                                                onChange={(e) => setLocalSettings({ ...localSettings, responsibleName: e.target.value })}
+                                                className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 text-base text-white focus:border-gold-polished transition-all outline-none"
+                                                placeholder="Nome completo do responsável"
                                             />
                                         </div>
                                     </div>
