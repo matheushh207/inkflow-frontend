@@ -74,6 +74,8 @@ export default function LandingPage() {
                 </div>
             </nav>
 
+            <main className="pt-20">
+
                 {/* HERO SECTION */}
                 <section className="relative py-24 lg:py-40 overflow-hidden">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full stipple-bg opacity-20 pointer-events-none" />
