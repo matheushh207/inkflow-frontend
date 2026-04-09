@@ -85,12 +85,21 @@ export default function SuperAdminDashboard() {
                             <ShieldCheck className="w-5 h-5 text-gold-polished" />
                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-polished">Torre de Comando SaaS</span>
                         </div>
-                        <h1 className="text-4xl font-black uppercase tracking-tighter italic">Painel de Controle <span className="text-gold-polished">InkFlow</span></h1>
+                        <h1 className="text-4xl font-black uppercase tracking-tighter italic">Gestão <span className="text-gold-polished">InkFlow</span></h1>
                     </div>
                     
                     <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="text-xs font-bold uppercase tracking-widest px-6 py-3 border border-white/10 rounded-xl hover:bg-white/5 transition-all">Ver meu Estúdio</Link>
-                        <button onClick={() => window.location.reload()} className="btn-premium px-6 py-3 text-xs">Atualizar Dados</button>
+                        <button 
+                            onClick={() => {
+                                localStorage.removeItem('access_token');
+                                document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                                window.location.href = '/login';
+                            }}
+                            className="text-xs font-bold uppercase tracking-widest px-6 py-3 border border-rose-500/20 text-rose-500 rounded-xl hover:bg-rose-500/10 transition-all"
+                        >
+                            Sair do Master
+                        </button>
+                        <button onClick={() => window.location.reload()} className="btn-premium px-6 py-3 text-xs">Atualizar Monitoramento</button>
                     </div>
                 </div>
 

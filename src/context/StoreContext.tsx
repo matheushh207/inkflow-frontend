@@ -197,20 +197,7 @@ const INITIAL_STATE: StoreState = {
     inventory: [],
     budgets: [],
     transactions: [],
-    team: [
-        {
-            id: 'admin-1',
-            name: 'Master Admin',
-            email: 'admin@inkflow.com.br',
-            role: 'SUPER_ADMIN',
-            status: 'Ativo',
-            appointmentsCount: 0,
-            commission: 0,
-            permissions: {
-                agenda: true, financeiro: true, clientes: true, estoque: true, configuracoes: true
-            }
-        },
-    ],
+    team: [],
     portfolio: [],
     consentTerms: [],
     consentPrintHistory: [],
@@ -228,12 +215,10 @@ const INITIAL_STATE: StoreState = {
     smtpSettings: {
         host: '', port: 587, secure: false, user: '', pass: ''
     },
-    currentUserId: 'admin-1',
-    tenantId: '123',
-    responsibleName: 'Proprietário',
-    notifications: [
-        { id: '1', title: 'Boas-vindas!', message: 'Seu estúdio InkFlow está pronto. Comece cadastrando sua equipe!', time: 'Agora', type: 'SUCCESS', read: false },
-    ]
+    currentUserId: '',
+    tenantId: '',
+    responsibleName: '',
+    notifications: []
 };
 
 // --- CONTEXT ---
@@ -282,6 +267,47 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             localStorage.setItem('inkflow_store', JSON.stringify(state));
         }
     }, [state, isLoaded]);
+
+    const fetchStudioInfo = async () => {
+        const token = localStorage.getItem('access_token');
+        if (!token) return;
+
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const res = await fetch(`${baseUrl}/tenants/profile`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setState(prev => ({
+                    ...prev,
+                    studioName: data.name,
+                    studioEmail: data.email,
+                    studioPhone: data.phone,
+                    studioCnpj: data.cnpj,
+                    studioLogo: data.logo || prev.studioLogo,
+                    responsibleName: data.responsibleName,
+                    tenantId: data.id,
+                    smtpSettings: {
+                        host: data.mailHost || '',
+                        port: data.mailPort || 587,
+                        secure: data.mailSecure || false,
+                        user: data.mailUser || '',
+                        pass: '' // Never return pass
+                    }
+                }));
+            }
+        } catch (error) {
+            console.error("Failed to fetch studio info", error);
+        }
+    };
+
+    useEffect(() => {
+        if (isLoaded) {
+            fetchStudioInfo();
+        }
+    }, [isLoaded]);
 
     // --- ACTIONS ---
 
@@ -551,11 +577,34 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setState(prev => ({ ...prev, studioName: name }));
     };
 
-    const updateStudioInfo = (info: Partial<StoreState>) => {
+    const updateStudioInfo = async (info: Partial<StoreState>) => {
+        // Optimistic update
         setState(prev => ({
             ...prev,
             ...info
         }));
+
+        try {
+            const token = localStorage.getItem('access_token');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            await fetch(`${baseUrl}/tenants/profile`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name: info.studioName,
+                    email: info.studioEmail,
+                    phone: info.studioPhone,
+                    cnpj: info.studioCnpj,
+                    logo: info.studioLogo,
+                    responsibleName: info.responsibleName
+                })
+            });
+        } catch (error) {
+            console.error("Failed to persist studio info", error);
+        }
     };
 
     const updateSmtpSettings = async (settings: StoreState['smtpSettings']) => {

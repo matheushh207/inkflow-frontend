@@ -26,7 +26,14 @@ export default function LoginPage() {
                 const data = await response.json();
                 // Salva o token no cookie para o middleware
                 document.cookie = `auth_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
-                window.location.href = '/dashboard';
+                localStorage.setItem('access_token', data.access_token);
+                
+                // Redirecionamento Inteligente baseado na Role
+                if (data.user?.role === 'SUPER_ADMIN') {
+                    window.location.href = '/super-admin';
+                } else {
+                    window.location.href = '/dashboard';
+                }
             } else {
                 alert('Credenciais inválidas. Tente novamente.');
             }
