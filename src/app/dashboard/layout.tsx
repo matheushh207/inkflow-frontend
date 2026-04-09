@@ -16,8 +16,9 @@ import {
     User,
     HeartPulse,
     FileSignature,
-    Image as ImageIcon,
-    ClipboardList
+    ImageIcon,
+    ClipboardList,
+    CreditCard
 } from 'lucide-react';
 import { useStore } from '@/context/StoreContext';
 import { clsx, type ClassValue } from 'clsx';
@@ -36,6 +37,7 @@ const MENU_ITEMS = [
     { icon: BarChart3, label: 'Orçamentos', href: '/dashboard/budgets', permission: 'any' }, // budgets generally visible or linked to agenda
     { icon: DollarSign, label: 'Financeiro', href: '/dashboard/finance', permission: 'financeiro' },
     { icon: Package, label: 'Estoque', href: '/dashboard/inventory', permission: 'estoque' },
+    { icon: CreditCard, label: 'Assinatura', href: '/dashboard/billing', permission: 'any' },
     { icon: User, label: 'Equipe', href: '/dashboard/users', permission: 'configuracoes' },
     { icon: HeartPulse, label: 'Anamnese', href: '/dashboard/anamnesis', permission: 'agenda' },
     { icon: FileSignature, label: 'Consentimento', href: '/dashboard/consent', permission: 'agenda' },
