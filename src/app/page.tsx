@@ -75,34 +75,23 @@ export default function LandingPage() {
             </nav>
 
             <main className="pt-20">
-                {/* HERO SECTION */}
-                <section className="relative py-24 lg:py-40 overflow-hidden">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full stipple-bg opacity-20 pointer-events-none" />
-                    <div className="absolute -top-24 -left-24 w-96 h-96 bg-gold-polished/10 rounded-full blur-[120px] pointer-events-none" />
-                    <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
+                    </div>
+                </section>
 
-                    <div className="max-w-[1400px] mx-auto px-6 relative z-10 text-center">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full mb-8 animate-premium-fade">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">A revolução na gestão já começou</span>
+                {/* INTERACTIVE SIMULATOR (Torre de Controle) */}
+                <section id="demonstracao" className="py-20 relative overflow-hidden bg-[#0A0A0A]">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-gold-polished/5 blur-[150px] -z-10" />
+                    <div className="max-w-[1400px] mx-auto px-6">
+                        <div className="text-center mb-16 animate-premium-fade">
+                            <p className="text-gold-polished font-black uppercase tracking-[0.3em] text-[10px] mb-4">Simulador Interativo</p>
+                            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">Experimente o <span className="text-gold-polished italic">InkFlow</span></h2>
+                            <p className="text-sm md:text-base text-zinc-400 max-w-2xl mx-auto uppercase tracking-widest font-bold">
+                                Navegue pela interface e veja como simplificamos a <br /> gestão do seu estúdio em tempo real.
+                            </p>
                         </div>
 
-                        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[0.9] max-w-5xl mx-auto uppercase">
-                            Transforme a <span className="text-gold-polished italic">Gestão</span> do seu estúdio de tatuagem.
-                        </h1>
-
-                        <p className="text-base sm:text-lg md:text-xl text-secondary-text max-w-3xl mx-auto mb-12 font-medium">
-                            O sistema mais completo do Brasil. Gerencie agendamentos, orçamentos, estoque e finanças em uma única plataforma premium.
-                        </p>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                            <Link href="/register" className="btn-premium px-10 py-5 text-lg w-full sm:w-auto flex items-center justify-center gap-3 group">
-                                TESTE GRÁTIS POR 5 DIAS
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                            <Link href="/login" className="px-6 py-2 border border-primary-light/20 rounded-xl text-sm font-bold hover:bg-white/5 transition-all">
-                                LOGIN
-                            </Link>
+                        <div className="relative z-10">
+                            <SystemDemo />
                         </div>
                     </div>
                 </section>
@@ -156,59 +145,6 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* DEMO VIDEO SECTION */}
-                <section id="demonstracao" className="py-24 relative overflow-hidden">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-gold-polished/5 blur-[150px] -z-10" />
-                    <div className="max-w-[1400px] mx-auto px-6">
-                        <div className="text-center mb-16 animate-premium-fade">
-                            <p className="text-gold-polished font-black uppercase tracking-[0.3em] text-[10px] mb-4">Experiência Real</p>
-                            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 underline decoration-gold-polished/30">O Sistema em Ação</h2>
-                            <p className="text-sm md:text-base text-zinc-400 max-w-2xl mx-auto uppercase tracking-widest font-bold">
-                                Veja como a interface fluida e os processos automatizados <br /> podem economizar horas do seu dia.
-                            </p>
-                        </div>
-
-                        <div className="relative max-w-5xl mx-auto">
-                            {/* Monitor Frame Decoration */}
-                            <div className="absolute -inset-1 bg-gradient-to-r from-gold-polished/30 to-blue-500/30 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                            
-                            <div className="relative bg-[#111] border-4 border-zinc-800 rounded-[2rem] overflow-hidden shadow-2xl shadow-black/50">
-                                {/* Video Player Placeholder/Real View */}
-                                <div className="aspect-video relative bg-black group cursor-pointer overflow-hidden">
-                                    <video 
-                                        autoPlay 
-                                        muted 
-                                        loop 
-                                        playsInline
-                                        poster="https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?q=80&w=1200&auto=format&fit=crop"
-                                        className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700"
-                                    >
-                                        <source src="https://player.vimeo.com/external/494252666.sd.mp4?s=72ad573458853e51ff65d0f6224e75d713f04400&profile_id=164&oauth2_token_id=57447761" type="video/mp4" />
-                                        Seu navegador no suporta vdeos.
-                                    </video>
-                                    
-                                    {/* Play Overlay */}
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-all duration-500">
-                                        <div className="w-20 h-20 bg-gold-polished rounded-full flex items-center justify-center text-black shadow-[0_0_50px_rgba(255,215,0,0.4)] group-hover:scale-110 transition-transform duration-500">
-                                            <Play className="w-8 h-8 fill-current" />
-                                        </div>
-                                    </div>
-
-                                    {/* Video Label */}
-                                    <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
-                                        <div>
-                                            <p className="text-[10px] font-black text-gold-polished uppercase tracking-[0.3em] mb-1">Preview do Sistema</p>
-                                            <p className="text-xl font-bold text-white">Dashboard InkFlow v4.0</p>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            {[1, 2, 3].map(i => <div key={i} className="w-1.5 h-1.5 bg-white/20 rounded-full" />)}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
 
                 {/* OLD DEMO SECTION (keep if needed, otherwise removed for the video focus) */}
                 {showDemo && (

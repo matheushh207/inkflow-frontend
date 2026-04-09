@@ -14,6 +14,7 @@ import {
     LogOut,
     Bell,
     User,
+    ShieldAlert,
     HeartPulse,
     FileSignature,
     ImageIcon,
@@ -63,6 +64,7 @@ export default function DashboardLayout({
 
     // Get current user details dynamically
     const currentUser = team.find(m => m.id === currentUserId) || team[0];
+    const isSuperAdmin = currentUser?.role === 'SUPER_ADMIN' || currentUser?.email === 'admin@inkflow.com.br';
 
     const handleLogout = () => {
         router.push('/login');
@@ -88,6 +90,15 @@ export default function DashboardLayout({
                 </div>
 
                 <nav className="flex-1 p-4 space-y-1 overflow-y-auto sidebar-scroll">
+                    {isSuperAdmin && (
+                        <Link
+                            href="/super-admin"
+                            className="flex items-center gap-3 px-5 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-gold-polished text-black shadow-[0_10px_25px_rgba(212,175,55,0.25)] mb-6 hover:scale-[1.03] active:scale-95 transition-all text-center justify-center font-black"
+                        >
+                            <ShieldAlert className="w-4 h-4" />
+                            Torre de Comando
+                        </Link>
+                    )}
                     {filteredMenu.map((item) => {
                         const isActive = pathname === item.href;
                         return (
