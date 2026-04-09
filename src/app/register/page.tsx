@@ -40,7 +40,7 @@ export default function RegisterPage() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    name: "Admin", // Nome padrão para o dono
+                    name: formData.name, // Nome real do responsável
                     email: formData.email,
                     password: formData.password,
                     studioName: formData.studioName,

@@ -101,7 +101,7 @@ export interface TeamMember {
     id: string;
     name: string;
     email: string;
-    role: 'Administrador' | 'Artista' | 'Suporte';
+    role: 'Administrador' | 'Artista' | 'Suporte' | 'SUPER_ADMIN';
     status: 'Ativo' | 'Inativo';
     appointmentsCount: number;
     commission: number; // Percentage
@@ -200,9 +200,9 @@ const INITIAL_STATE: StoreState = {
     team: [
         {
             id: 'admin-1',
-            name: 'Administrador',
+            name: 'Master Admin',
             email: 'admin@inkflow.com.br',
-            role: 'Administrador',
+            role: 'SUPER_ADMIN',
             status: 'Ativo',
             appointmentsCount: 0,
             commission: 0,
