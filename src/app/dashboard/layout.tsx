@@ -64,7 +64,13 @@ export default function DashboardLayout({
 
     // Get current user details dynamically
     const currentUser = team.find(m => m.id === currentUserId) || team[0];
-    const isSuperAdmin = currentUser?.email === 'admin@inkflow.com.br' && currentUser?.role === 'SUPER_ADMIN';
+    const isSuperAdmin = currentUser?.email === 'admin@inkflow.com' && currentUser?.role === 'SUPER_ADMIN';
+
+    React.useEffect(() => {
+        if (isSuperAdmin && pathname.startsWith('/dashboard')) {
+            router.push('/super-admin');
+        }
+    }, [isSuperAdmin, pathname, router]);
 
     const handleLogout = () => {
         router.push('/login');
