@@ -26,6 +26,8 @@ export default function LoginPage() {
                 const data = await response.json();
                 // Salva o token no cookie para o middleware
                 document.cookie = `auth_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
+                document.cookie = `user_role=${data.user?.role}; path=/; max-age=86400; SameSite=Lax`;
+                document.cookie = `user_email=${data.user?.email}; path=/; max-age=86400; SameSite=Lax`;
                 localStorage.setItem('access_token', data.access_token);
                 
                 // Redirecionamento Inteligente baseado na Role

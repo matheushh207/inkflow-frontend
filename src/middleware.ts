@@ -22,9 +22,21 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    // 3. Logic to check tenant context (if subdomain or path based)
-    // For now, simple check. In a real scenario, we would decode JWT 
-    // to check if subscription is ACTIVE.
+    const userRole = request.cookies.get('user_role')?.value;
+    const userEmail = request.cookies.get('user_email')?.value;
+
+    // 3. Super Admin Restriction
+    if (userEmail === 'admin@inkflow.com' || userRole === 'SUPER_ADMIN') {
+        // Super Admin deve estar apenas na Torre de Comando
+        if (!pathname.startsWith('/super-admin') && !pathname.startsWith('/api')) {
+            return NextResponse.redirect(new URL('/super-admin', request.url));
+        }
+    } else {
+        // Usuários comuns não podem acessar a Torre de Comando
+        if (pathname.startsWith('/super-admin')) {
+            return NextResponse.redirect(new URL('/dashboard', request.url));
+        }
+    }
     
     return NextResponse.next();
 }
