@@ -25,14 +25,18 @@ export function middleware(request: NextRequest) {
     const userRole = request.cookies.get('user_role')?.value;
     const userEmail = request.cookies.get('user_email')?.value;
 
-    // 3. Super Admin Restriction
-    if (userEmail === 'admin@inkflow.com' || userRole === 'SUPER_ADMIN') {
-        // Super Admin deve estar apenas na Torre de Comando
+    // 3. Super Admin Restriction (Rigorosa)
+    const isSuperAdminEmail = userEmail === 'admin@inkflow.com';
+    const hasSuperAdminRole = userRole === 'SUPER_ADMIN';
+    const isActuallySuperAdmin = isSuperAdminEmail && hasSuperAdminRole;
+
+    if (isActuallySuperAdmin) {
+        // O Super Admin VERDADEIRO deve estar apenas na Torre de Comando
         if (!pathname.startsWith('/super-admin') && !pathname.startsWith('/api')) {
             return NextResponse.redirect(new URL('/super-admin', request.url));
         }
     } else {
-        // Usuários comuns não podem acessar a Torre de Comando
+        // Qualquer outro usuário (mesmo se tiver a role SUPER_ADMIN por erro) não pode acessar a Torre de Comando
         if (pathname.startsWith('/super-admin')) {
             return NextResponse.redirect(new URL('/dashboard', request.url));
         }

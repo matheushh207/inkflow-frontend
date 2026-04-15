@@ -30,8 +30,10 @@ export default function LoginPage() {
                 document.cookie = `user_email=${data.user?.email}; path=/; max-age=86400; SameSite=Lax`;
                 localStorage.setItem('access_token', data.access_token);
                 
-                // Redirecionamento Inteligente baseado na Role
-                if (data.user?.role === 'SUPER_ADMIN') {
+                // Redirecionamento Inteligente baseado na Role e E-mail
+                const isSuperAdmin = data.user?.role === 'SUPER_ADMIN' && data.user?.email === 'admin@inkflow.com';
+                
+                if (isSuperAdmin) {
                     window.location.href = '/super-admin';
                 } else {
                     window.location.href = '/dashboard';
