@@ -64,6 +64,28 @@ export default function SuperAdminDashboard() {
         t.users[0]?.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const handleApplyDiscount = async (tenantId: string, percentage: number) => {
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const token = localStorage.getItem('access_token');
+            const res = await fetch(`${baseUrl}/admin/tenants/${tenantId}/discount`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify({ discount: percentage })
+            });
+
+            if (res.ok) {
+                alert(`Desconto de ${percentage}% aplicado com sucesso!`);
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error applying discount:', error);
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
@@ -208,10 +230,33 @@ export default function SuperAdminDashboard() {
                                             </td>
                                             <td className="p-6">
                                                 <div className="flex items-center gap-3">
-                                                    <button className="p-2 bg-white/5 hover:bg-gold-polished/20 rounded-lg text-zinc-400 hover:text-gold-polished transition-all" title="Ver Detalhes">
-                                                        <ExternalLink className="w-4 h-4" />
+                                                    <div className="flex bg-zinc-900 rounded-lg p-1 border border-white/5">
+                                                        {[15, 20, 25].map(pct => (
+                                                            <button 
+                                                                key={pct}
+                                                                onClick={() => handleApplyDiscount(tenant.id, pct)}
+                                                                className={`px-2 py-1 text-[9px] font-black rounded transition-all ${tenant.discount === pct ? 'bg-gold-polished text-black' : 'text-zinc-500 hover:text-white'}`}
+                                                                title={`Aplicar ${pct}% de desconto`}
+                                                            >
+                                                                {pct}%
+                                                            </button>
+                                                        ))}
+                                                        {tenant.discount > 0 && (
+                                                            <button 
+                                                                onClick={() => handleApplyDiscount(tenant.id, 0)}
+                                                                className="px-2 py-1 text-[9px] font-black text-rose-500 hover:bg-rose-500/10 rounded"
+                                                                title="Remover Desconto"
+                                                            >
+                                                                X
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                    <button 
+                                                        onClick={() => window.open(`https://wa.me/5500000000000?text=Olá, sou o suporte master. Como posso ajudar o estúdio ${tenant.name}?`)}
+                                                        className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-white transition-colors"
+                                                    >
+                                                        SUPORTE
                                                     </button>
-                                                    <button className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-white transition-colors">Suporte</button>
                                                 </div>
                                             </td>
                                         </tr>

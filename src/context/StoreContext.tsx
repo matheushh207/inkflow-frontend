@@ -153,6 +153,7 @@ interface StoreState {
         type: 'INFO' | 'SUCCESS' | 'WARNING';
         read: boolean;
     }[];
+    maxArtists: number;
 }
 
 interface StoreContextType extends StoreState {
@@ -218,7 +219,8 @@ const INITIAL_STATE: StoreState = {
     currentUserId: '',
     tenantId: '',
     responsibleName: '',
-    notifications: []
+    notifications: [],
+    maxArtists: 1
 };
 
 // --- CONTEXT ---
@@ -289,6 +291,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
                     studioLogo: data.logo || prev.studioLogo,
                     responsibleName: data.responsibleName,
                     tenantId: data.id,
+                    maxArtists: data.subscriptions?.[0]?.plan?.maxArtists || 1,
                     smtpSettings: {
                         host: data.mailHost || '',
                         port: data.mailPort || 587,
@@ -440,6 +443,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     };
 
     const addTeamMember = (member: Omit<TeamMember, 'id' | 'appointmentsCount' | 'permissions'>) => {
+        // Enforce maxArtists limit based on plan
+        const artistCount = state.team.filter(m => m.role === 'Artista').length;
+        if (member.role === 'Artista' && artistCount >= state.maxArtists) {
+            alert(`Limite de Tatuadores atingido! Seu plano atual permite apenas ${state.maxArtists} tatuador(es). Faça o upgrade na aba Assinatura para liberar mais vagas.`);
+            return;
+        }
+
         const newMember: TeamMember = {
             ...member,
             id: Math.random().toString(36).substr(2, 9),

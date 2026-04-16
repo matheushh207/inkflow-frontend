@@ -22,7 +22,8 @@ import {
     CreditCard,
     Info,
     CheckCircle2,
-    AlertTriangle
+    AlertTriangle,
+    Headset
 } from 'lucide-react';
 import { useStore } from '@/context/StoreContext';
 import { clsx, type ClassValue } from 'clsx';
@@ -47,6 +48,7 @@ const MENU_ITEMS = [
     { icon: HeartPulse, label: 'Anamnese', href: '/dashboard/anamnesis', permission: 'agenda' },
     { icon: FileSignature, label: 'Consentimento', href: '/dashboard/consent', permission: 'agenda' },
     { icon: ImageIcon, label: 'Portfólio', href: '/dashboard/portfolio', permission: 'any' },
+    { icon: Headset, label: 'Suporte 24h', href: 'https://wa.me/5500000000000', permission: 'any', highlight: true },
     { icon: Settings, label: 'Configurações', href: '/dashboard/settings', permission: 'configuracoes' },
 ];
 
@@ -144,16 +146,18 @@ export default function DashboardLayout({
                                 key={item.href}
                                 href={item.href}
                                 className={cn(
-                                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all group", // Increased py from 2.5 to 3
+                                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all group",
                                     isActive
-                                        ? "bg-gold-polished/10 text-gold-polished"
-                                        : "text-secondary-text hover:bg-zinc-900 hover:text-white"
+                                        ? "bg-gold-polished text-black shadow-[0_5px_15px_rgba(212,175,55,0.3)]"
+                                        : item.highlight
+                                            ? "bg-gold-polished/10 text-gold-polished border border-gold-polished/20 hover:bg-gold-polished hover:text-black"
+                                            : "text-secondary-text hover:bg-zinc-900 hover:text-white"
                                 )}
                             >
-                                <item.icon className={cn("w-5 h-5", isActive ? "text-gold-polished" : "group-hover:text-gold-polished")} />
+                                <item.icon className={cn("w-5 h-5", isActive ? "text-black" : item.highlight ? "text-gold-polished group-hover:text-black" : "group-hover:text-gold-polished")} />
                                 <span className="text-[13px] font-bold uppercase tracking-widest">{item.label}</span>
-                                {isActive && (
-                                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-gold-polished shadow-[0_0_8px_var(--accent-secondary)]" />
+                                {isActive && !item.highlight && (
+                                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-black/50" />
                                 )}
                             </Link>
                         );

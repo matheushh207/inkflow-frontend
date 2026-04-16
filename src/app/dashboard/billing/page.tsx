@@ -19,7 +19,7 @@ const plans = [
         name: 'Solo', 
         price: 50, 
         icon: Zap,
-        features: ['1 Tatuador', 'Clientes Ilimitados', 'Agenda Online', 'Financeiro Básico'],
+        features: ['1 Tatuador (Você)', 'Todos os Recursos Inclusos', 'Agenda Online', 'Financeiro Profissional', 'Clientes Ilimitados'],
         color: 'text-blue-500'
     },
     { 
@@ -27,7 +27,7 @@ const plans = [
         name: 'Professional', 
         price: 80, 
         icon: Star,
-        features: ['Até 3 Tatuadores', 'Gestão Financeira Full', 'Suporte Prioritário', 'Relatórios DRE'],
+        features: ['Até 3 Tatuadores', 'Todos os Recursos Inclusos', 'Gestão Financeira Full', 'Suporte Prioritário 24h', 'Relatórios de Performance'],
         color: 'text-gold-polished',
         popular: true
     },
@@ -36,7 +36,7 @@ const plans = [
         name: 'Elite', 
         price: 120, 
         icon: ShieldCheck,
-        features: ['Até 10 Tatuadores', 'Métricas Avançadas', 'Whitelist de E-mail', 'Assistente Dedicado'],
+        features: ['Até 10 Tatuadores', 'Todos os Recursos Inclusos', 'Métricas Avançadas', 'Whitelist de E-mail', 'Assistente Dedicado'],
         color: 'text-purple-500'
     },
 ];
