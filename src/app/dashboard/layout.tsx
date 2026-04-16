@@ -27,7 +27,8 @@ import {
 import { useStore } from '@/context/StoreContext';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import SubscriptionBlock from '@/components/SubscriptionBlock';
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -59,6 +60,8 @@ export default function DashboardLayout({
     const { team, currentUserId, setCurrentUser, notifications, studioName } = useStore();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
+    const [isExpired, setIsExpired] = useState(false);
+    const [isCheckingSubscription, setIsCheckingSubscription] = useState(true);
 
     const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -71,6 +74,35 @@ export default function DashboardLayout({
             router.push('/super-admin');
         }
     }, [isSuperAdmin, pathname, router]);
+
+    // Check Subscription Status
+    useEffect(() => {
+        const checkSubscription = async () => {
+            if (isSuperAdmin) {
+                setIsCheckingSubscription(false);
+                return;
+            }
+
+            try {
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+                const token = localStorage.getItem('access_token');
+                const response = await fetch(`${baseUrl}/billing/status`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                // Consider expired if no active subscription or expired date
+                const expired = !data || data.status !== 'ACTIVE' || new Date(data.expiresAt) < new Date();
+                setIsExpired(expired);
+            } catch (error) {
+                console.error('Subscription check error:', error);
+            } finally {
+                setIsCheckingSubscription(false);
+            }
+        };
+
+        checkSubscription();
+    }, [isSuperAdmin]);
 
     const handleLogout = () => {
         router.push('/login');
@@ -261,7 +293,11 @@ export default function DashboardLayout({
                 </header>
 
                 <div className="flex-1 overflow-y-auto p-3 md:p-8 scrollbar-hide">
-                    {children}
+                    {isExpired && !isSuperAdmin && !pathname.includes('/billing') ? (
+                        <SubscriptionBlock />
+                    ) : (
+                        children
+                    )}
                 </div>
             </main>
 
