@@ -25,7 +25,7 @@ const plans = [
     },
     { 
         id: 'professional', 
-        name: 'Professional', 
+        name: 'Profissional', 
         price: 80, 
         icon: Star,
         features: ['Até 3 Tatuadores', 'Todos os Recursos Liberados', 'Gestão Financeira Full', 'Suporte Prioritário 24h', 'Relatórios de Performance'],

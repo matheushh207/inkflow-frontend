@@ -159,8 +159,8 @@ export default function RegisterPage() {
                             onChange={handleChange}
                         >
                             <option value="Solo" className="bg-[#1A1A1A]">Plano Solo (1 Profissional)</option>
-                            <option value="Professional" className="bg-[#1A1A1A]">Plano Professional (Até 5 Prof.)</option>
-                            <option value="Elite" className="bg-[#1A1A1A]">Plano Elite (Ilimitado)</option>
+                            <option value="Professional" className="bg-[#1A1A1A]">Plano Profissional (Até 3 Tatuadores)</option>
+                            <option value="Elite" className="bg-[#1A1A1A]">Plano Elite (Até 10 Tatuadores)</option>
                         </SelectGroup>
                     </div>
 
