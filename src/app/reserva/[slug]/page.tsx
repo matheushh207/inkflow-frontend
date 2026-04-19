@@ -19,6 +19,7 @@ import {
     Loader2
 } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import StudioLogo from '@/components/StudioLogo';
 
 export default function ReservaPublicaDinamicaPage() {
     const params = useParams();
@@ -158,9 +159,11 @@ export default function ReservaPublicaDinamicaPage() {
             {/* HEADER */}
             <header className="max-w-4xl w-full mx-auto flex justify-between items-center mb-12 relative z-10">
                 <div className="flex items-center gap-4">
-                    <div className="p-2 bg-gold-polished/10 rounded-xl border border-gold-polished/20">
-                        <img src={studioInfo.logo || "/logo.png"} alt="Logo" className="h-10 w-auto" />
-                    </div>
+                    <StudioLogo 
+                        logoUrl={studioInfo.logo} 
+                        studioName={studioInfo.name} 
+                        size="md"
+                    />
                     <div>
                         <h1 className="text-2xl font-black text-white tracking-tighter uppercase">{studioInfo.name}</h1>
                         <p className="text-[9px] font-black text-secondary-text uppercase tracking-widest">Reserva & Orçamentos Online</p>

@@ -29,18 +29,49 @@ export default function UsersPage() {
         }
     };
 
-    const handleInvite = () => {
+    const handleInvite = async () => {
         if (!newMember.name || !newMember.email) {
             alert('Nome e E-mail são obrigatórios!');
             return;
         }
-        addTeamMember({
-            ...newMember,
-            status: 'Ativo'
-        });
-        setIsModalOpen(false);
-        setNewMember({ name: '', email: '', role: 'Artista', commission: 40 });
-        alert('Convite enviado com sucesso! O novo membro receberá as instruções por e-mail.');
+
+        try {
+            const token = localStorage.getItem('access_token');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            
+            // Map labels to DB Roles if necessary (Assuming Backend expects UserRole enum)
+            const roleMap: Record<string, string> = {
+                'Artista': 'ARTIST',
+                'Administrador': 'ADMIN',
+                'Suporte': 'RECEPTIONIST'
+            };
+
+            const response = await fetch(`${baseUrl}/invitations/invite`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify({
+                    email: newMember.email,
+                    role: roleMap[newMember.role] || 'ARTIST'
+                })
+            });
+
+            if (!response.ok) throw new Error('Falha ao enviar convite');
+
+            addTeamMember({
+                ...newMember,
+                status: 'Pendente'
+            });
+            
+            setIsModalOpen(false);
+            setNewMember({ name: '', email: '', role: 'Artista', commission: 40 });
+            alert('Convite enviado com sucesso! O novo membro receberá as instruções por e-mail.');
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao enviar convite profissional. Verifique as configurações de SMTP.');
+        }
     };
 
     const handleUpdate = () => {

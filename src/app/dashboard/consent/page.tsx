@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { useStore } from '@/context/StoreContext';
 
 export default function ConsentPage() {
-    const { consentTerms, consentPrintHistory, clients, recordConsentPrint, deleteConsentTerm, updateConsentTerm } = useStore();
+    const { consentTerms, consentPrintHistory, clients, recordConsentPrint, deleteConsentTerm, updateConsentTerm, studioName } = useStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedTermId, setSelectedTermId] = useState('');
@@ -67,8 +67,10 @@ export default function ConsentPage() {
             <div className={`fixed inset-0 bg-white z-[9999] p-12 text-black overflow-y-auto ${showPrintView ? 'block' : 'hidden print:block'}`}>
                 <div className="max-w-3xl mx-auto space-y-8 font-serif leading-relaxed">
                     {/* Header */}
-                    <div className="text-center border-b-2 border-black pb-6">
-                        <h1 className="text-3xl font-black uppercase tracking-tighter">INKFLOW STUDIO</h1>
+                    <div className="text-center border-b-2 border-black pb-6 space-y-2">
+                        <h1 className="text-4xl font-black uppercase tracking-tighter" style={{ fontFamily: 'var(--font-gothic), serif' }}>
+                            {studioName || 'STUDIO'}
+                        </h1>
                         <p className="text-[12px] uppercase font-bold tracking-widest mt-1">Termo de Consentimento & Responsabilidade</p>
                     </div>
 
@@ -103,7 +105,7 @@ export default function ConsentPage() {
 
                         <section className="space-y-2">
                             <h3 className="font-bold uppercase text-sm">4. Uso de Imagem</h3>
-                            <p className="text-xs text-justify">Fica autorizado o uso de registros fotográficos e audiovisuais do procedimento e da arte finalizada para fins de divulgação em portfólios, redes sociais e material publicitário do estúdio {new Date().getFullYear()}.</p>
+                            <p className="text-xs text-justify">Fica autorizado o uso de registros fotográficos e audiovisuais do procedimento e da arte finalizada para fins de divulgação em portfólios, redes sociais e material publicitário do estúdio <strong>{studioName || ''}</strong>.</p>
                         </section>
                     </div>
 

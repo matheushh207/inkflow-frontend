@@ -189,6 +189,7 @@ interface StoreContextType extends StoreState {
     updateStudioInfo: (info: Partial<StoreState>) => void;
     updateSmtpSettings: (settings: StoreState['smtpSettings']) => Promise<void>;
     setCurrentUser: (id: string) => void;
+    markNotificationAsRead: (id: string) => Promise<void>;
 }
 
 // --- INITIAL MOCK DATA ---
@@ -690,6 +691,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setState(prev => ({ ...prev, currentUserId: id }));
     };
 
+    const markNotificationAsRead = async (id: string) => {
+        // Optimistic update
+        setState(prev => ({
+            ...prev,
+            notifications: prev.notifications.map(n => n.id === id ? { ...n, read: true } : n)
+        }));
+
+        try {
+            const token = localStorage.getItem('access_token');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            await fetch(`${baseUrl}/notifications/${id}/read`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+        } catch (error) {
+            console.error("Failed to sync notification read status", error);
+        }
+    };
+
     const hexToRgb = (hex: string) => {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ?
@@ -741,7 +761,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             updateStudioName,
             updateStudioInfo,
             updateSmtpSettings,
-            setCurrentUser
+            setCurrentUser,
+            markNotificationAsRead
         }}>
             {children}
         </StoreContext.Provider>

@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { useStore } from '@/context/StoreContext';
 
 export default function AnamnesisPage() {
-    const { clients, anamnesisPrintHistory, recordAnamnesisPrint } = useStore();
+    const { clients, anamnesisPrintHistory, recordAnamnesisPrint, studioName } = useStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState('');
     const [showPrintView, setShowPrintView] = useState(false);
@@ -46,8 +46,10 @@ export default function AnamnesisPage() {
             <div className={`fixed inset-0 bg-white z-[9999] p-12 text-black overflow-y-auto ${showPrintView ? 'block' : 'hidden print:block'}`}>
                 <div className="max-w-3xl mx-auto space-y-8 font-serif leading-relaxed">
                     {/* Header */}
-                    <div className="text-center border-b-2 border-black pb-6">
-                        <h1 className="text-3xl font-black uppercase tracking-tighter">INKFLOW STUDIO</h1>
+                    <div className="text-center border-b-2 border-black pb-6 space-y-2">
+                        <h1 className="text-4xl font-black uppercase tracking-tighter" style={{ fontFamily: 'var(--font-gothic), serif' }}>
+                            {studioName || 'STUDIO'}
+                        </h1>
                         <p className="text-[12px] uppercase font-bold tracking-widest mt-1">Ficha de Anamnese & Consentimento Informado</p>
                     </div>
 
@@ -85,8 +87,8 @@ export default function AnamnesisPage() {
                     {/* Consent Text */}
                     <div className="space-y-3 text-[10px] text-justify leading-snug">
                         <h4 className="font-bold uppercase">Termo de Responsabilidade</h4>
-                        <p>Declaro estar ciente de todos os procedimentos aos quais serei submetido, bem como dos riscos inerentes (infecção, reações alérgicas ou má cicatrização). Comprometo-me a seguir todas as orientações pós-procedimento fornecidas pelo profissional. Isento o estúdio e o profissional de qualquer responsabilidade por omissão de informações sobre meu estado de saúde.</p>
-                        <p>Autorizo o uso de fotografias do procedimento para fins de divulgação em portfólio e redes sociais do estúdio.</p>
+                        <p>Declaro estar ciente de todos os procedimentos aos quais serei submetido, bem como dos riscos inerentes (infecção, reações alérgicas ou má cicatrização). Comprometo-me a seguir todas as orientações pós-procedimento fornecidas pelo profissional. Isento o estúdio <strong>{studioName || ''}</strong> e o profissional de qualquer responsabilidade por omissão de informações sobre meu estado de saúde.</p>
+                        <p>Autorizo o uso de fotografias do procedimento para fins de divulgação em portfólio e redes sociais do estúdio <strong>{studioName || ''}</strong>.</p>
                     </div>
 
                     {/* Signatures */}

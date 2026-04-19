@@ -11,8 +11,13 @@ import {
     Search, 
     Filter,
     ShieldCheck,
-    AlertCircle
+    AlertCircle,
+    Crown,
+    Calendar,
+    Infinity,
+    CheckCircle2
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -65,6 +70,8 @@ export default function SuperAdminDashboard() {
     );
 
     const handleApplyDiscount = async (tenantId: string, percentage: number) => {
+        if (!confirm(`Deseja aplicar ${percentage}% de desconto e enviar um e-mail de oferta profissional para este estúdio?`)) return;
+        
         try {
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
             const token = localStorage.getItem('access_token');
@@ -78,11 +85,36 @@ export default function SuperAdminDashboard() {
             });
 
             if (res.ok) {
-                alert(`Desconto de ${percentage}% aplicado com sucesso!`);
+                alert(`Desconto de ${percentage}% aplicado e E-mail enviado com sucesso!`);
                 window.location.reload();
             }
         } catch (error) {
             console.error('Error applying discount:', error);
+        }
+    };
+
+    const handleExtendSubscription = async (tenantId: string, days: number, isLifetime: boolean = false) => {
+        const msg = isLifetime ? "Liberar acesso VITALÍCIO para este estúdio?" : `Dar +${days} dias de acesso de presente?`;
+        if (!confirm(msg)) return;
+
+        try {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const token = localStorage.getItem('access_token');
+            const res = await fetch(`${baseUrl}/admin/tenants/${tenantId}/extend`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify({ days, isLifetime })
+            });
+
+            if (res.ok) {
+                alert(`Assinatura estendida com sucesso!`);
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error extending sub:', error);
         }
     };
 
@@ -121,7 +153,7 @@ export default function SuperAdminDashboard() {
                         >
                             Sair do Master
                         </button>
-                        <button onClick={() => window.location.reload()} className="btn-premium px-6 py-3 text-xs">Atualizar Monitoramento</button>
+                        <button onClick={() => window.location.reload()} className="px-6 py-3 bg-purple-600 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-purple-500 transition-all shadow-lg hover:shadow-purple-500/20 border border-purple-400/20">Atualizar Monitoramento</button>
                     </div>
                 </div>
 
@@ -185,10 +217,11 @@ export default function SuperAdminDashboard() {
                             <thead>
                                 <tr className="bg-white/5 uppercase text-[10px] font-black tracking-[0.2em] text-zinc-500">
                                     <th className="p-6">Estúdio / Slug</th>
+                                    <th className="p-6">Cadastro</th>
                                     <th className="p-6">Administrador</th>
                                     <th className="p-6">Plano / Status</th>
                                     <th className="p-6">Expiração</th>
-                                    <th className="p-6">Ações</th>
+                                    <th className="p-6">Ações / Ofertas</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-premium-border">
@@ -204,12 +237,19 @@ export default function SuperAdminDashboard() {
                                                 <p className="text-[10px] text-zinc-500 uppercase tracking-widest">{tenant.slug}</p>
                                             </td>
                                             <td className="p-6">
+                                                <p className="text-[10px] font-black text-zinc-600 uppercase mb-1">Inscrito em:</p>
+                                                <p className="text-xs text-white">{new Date(tenant.createdAt).toLocaleDateString('pt-BR')}</p>
+                                            </td>
+                                            <td className="p-6">
                                                 <p className="text-sm text-zinc-300">{tenant.users[0]?.name || 'N/A'}</p>
                                                 <p className="text-[10px] text-zinc-500">{tenant.users[0]?.email || 'N/A'}</p>
                                             </td>
                                             <td className="p-6">
                                                 <div className="flex items-center gap-2">
-                                                    <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-tighter ${sub?.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                                                    <span className={cn(
+                                                        "px-2 py-1 rounded text-[10px] font-black uppercase tracking-tighter",
+                                                        sub?.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'
+                                                    )}>
                                                         {sub?.plan?.name || 'SEM PLANO'}
                                                     </span>
                                                     {isTrial && <span className="px-2 py-1 bg-amber-500/10 text-amber-500 rounded text-[10px] font-black uppercase tracking-tighter">TRIAL</span>}
@@ -217,26 +257,35 @@ export default function SuperAdminDashboard() {
                                             </td>
                                             <td className="p-6">
                                                 <div className="space-y-1">
-                                                    <p className={`text-sm font-bold ${daysLeft <= 1 ? 'text-rose-500' : 'text-zinc-300'}`}>
-                                                        {daysLeft > 0 ? `${daysLeft} dias restantes` : 'Expirado'}
-                                                    </p>
-                                                    <div className="h-1 w-24 bg-zinc-800 rounded-full overflow-hidden">
-                                                        <div 
-                                                            className={`h-full rounded-full ${daysLeft <= 1 ? 'bg-rose-500' : 'bg-gold-polished'}`} 
-                                                            style={{ width: `${Math.min(100, (daysLeft / 5) * 100)}%` }} 
-                                                        />
-                                                    </div>
+                                                    {daysLeft > 10000 ? (
+                                                        <div className="flex items-center gap-2 text-purple-400">
+                                                            <Infinity size={16} />
+                                                            <span className="text-[10px] font-black uppercase tracking-widest bg-purple-500/10 px-2 py-1 rounded border border-purple-500/20 shadow-[0_0_10px_rgba(168,85,247,0.2)]">VIP VITALÍCIO</span>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <p className={`text-sm font-bold ${daysLeft <= 1 ? 'text-rose-500' : 'text-zinc-300'}`}>
+                                                                {daysLeft > 0 ? `${daysLeft} dias restantes` : 'Expirado'}
+                                                            </p>
+                                                            <div className="h-1 w-24 bg-zinc-800 rounded-full overflow-hidden">
+                                                                <div 
+                                                                    className={`h-full rounded-full ${daysLeft <= 1 ? 'bg-rose-500' : 'bg-gold-polished'}`} 
+                                                                    style={{ width: `${Math.min(100, (daysLeft / 5) * 100)}%` }} 
+                                                                />
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="p-6">
-                                                <div className="flex items-center gap-3">
+                                                <div className="flex flex-col gap-3">
                                                     <div className="flex bg-zinc-900 rounded-lg p-1 border border-white/5">
                                                         {[15, 20, 25].map(pct => (
                                                             <button 
                                                                 key={pct}
                                                                 onClick={() => handleApplyDiscount(tenant.id, pct)}
-                                                                className={`px-2 py-1 text-[9px] font-black rounded transition-all ${tenant.discount === pct ? 'bg-gold-polished text-black' : 'text-zinc-500 hover:text-white'}`}
-                                                                title={`Aplicar ${pct}% de desconto`}
+                                                                className={`px-2 py-1 text-[9px] font-black rounded transition-all ${tenant.discount === pct ? 'bg-emerald-500 text-white' : 'text-zinc-500 hover:text-white'}`}
+                                                                title={`Enviar Oferta de ${pct}%`}
                                                             >
                                                                 {pct}%
                                                             </button>
@@ -251,11 +300,34 @@ export default function SuperAdminDashboard() {
                                                             </button>
                                                         )}
                                                     </div>
+                                                    
+                                                    <div className="flex gap-2">
+                                                        <button 
+                                                            onClick={() => handleExtendSubscription(tenant.id, 7)}
+                                                            className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[9px] font-bold text-zinc-400 hover:bg-white/10 hover:text-white transition-all"
+                                                        >
+                                                            +7D
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => handleExtendSubscription(tenant.id, 30)}
+                                                            className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[9px] font-bold text-zinc-400 hover:bg-white/10 hover:text-white transition-all"
+                                                        >
+                                                            +30D
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => handleExtendSubscription(tenant.id, 0, true)}
+                                                            className="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[9px] font-black text-purple-400 hover:bg-purple-500/20 hover:text-purple-300 transition-all flex items-center gap-1"
+                                                            title="Liberar Acesso Vitalício"
+                                                        >
+                                                            <Crown size={12} /> VIP
+                                                        </button>
+                                                    </div>
+
                                                     <button 
                                                         onClick={() => window.open(`https://wa.me/5500000000000?text=Olá, sou o suporte master. Como posso ajudar o estúdio ${tenant.name}?`)}
-                                                        className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-white transition-colors"
+                                                        className="text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-white transition-colors w-fit mx-auto"
                                                     >
-                                                        SUPORTE
+                                                        SUPORTE MASTER
                                                     </button>
                                                 </div>
                                             </td>

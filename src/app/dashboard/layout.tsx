@@ -59,7 +59,7 @@ export default function DashboardLayout({
 }) {
     const pathname = usePathname();
     const router = useRouter();
-    const { team, currentUserId, setCurrentUser, notifications, studioName } = useStore();
+    const { team, currentUserId, setCurrentUser, notifications, studioName, markNotificationAsRead } = useStore();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
     const [isExpired, setIsExpired] = useState(false);
@@ -111,8 +111,27 @@ export default function DashboardLayout({
     };
 
     const filteredMenu = MENU_ITEMS.filter(item => {
+        if (!currentUser) return false;
+        
+        // Super Admin gets everything (filtered by redirect usually)
+        if (currentUser.role === 'SUPER_ADMIN') return true;
+
+        const role = currentUser.role;
+
+        // Role-based restrictions
+        if (role === 'Artista') {
+            const forbiddenForArtists = ['Financeiro', 'Equipe', 'Configurações', 'Assinatura', 'Estoque'];
+            if (forbiddenForArtists.includes(item.label)) return false;
+        }
+
+        if (role === 'Recepção' || role === 'Suporte') {
+            const forbiddenForReception = ['Financeiro', 'Equipe', 'Assinatura', 'Configurações'];
+            if (forbiddenForReception.includes(item.label)) return false;
+        }
+
+        // Default permission check
         if (item.permission === 'any') return true;
-        if (!currentUser || !currentUser.permissions) return false;
+        if (!currentUser.permissions) return false;
         const permissionKey = item.permission as keyof typeof currentUser.permissions;
         return currentUser.permissions[permissionKey];
     });
@@ -259,7 +278,18 @@ export default function DashboardLayout({
                                         <div className="max-h-[400px] overflow-y-auto">
                                             {notifications.length > 0 ? (
                                                 notifications.map((n) => (
-                                                    <div key={n.id} className="p-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors cursor-pointer group">
+                                                    <div 
+                                                        key={n.id} 
+                                                        onClick={() => {
+                                                            markNotificationAsRead(n.id);
+                                                            setNotificationsOpen(false);
+                                                        }}
+                                                        className={cn(
+                                                            "p-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors cursor-pointer group relative",
+                                                            !n.read && "bg-gold-polished/[0.02]"
+                                                        )}
+                                                    >
+                                                        {!n.read && <div className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gold-polished animate-pulse" />}
                                                         <div className="flex gap-3">
                                                             <div className={cn(
                                                                 "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 border",

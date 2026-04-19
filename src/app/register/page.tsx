@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -16,6 +17,10 @@ import {
 
 export default function RegisterPage() {
     const [isLoading, setIsLoading] = useState(false);
+    const searchParams = useSearchParams();
+    const token = searchParams.get('token');
+    const isInvitation = !!token;
+
     const [formData, setFormData] = useState({
         name: '',
         studioName: '',
@@ -36,24 +41,47 @@ export default function RegisterPage() {
         setIsLoading(true);
         try {
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
-            const response = await fetch(`${baseUrl}/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: formData.name, // Nome real do responsável
-                    email: formData.email,
-                    password: formData.password,
-                    studioName: formData.studioName,
-                    planName: formData.plan
-                }),
-            });
+            
+            if (isInvitation) {
+                // Aceitar Convite (Membro da Equipe)
+                const response = await fetch(`${baseUrl}/invitations/accept`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token,
+                        password: formData.password,
+                        name: formData.name
+                    }),
+                });
 
-            if (response.ok) {
-                alert('Conta criada com sucesso! Redirecionando para o login...');
-                window.location.href = '/login';
+                if (response.ok) {
+                    alert('Conta ativada com sucesso! Bem-vindo à equipe. Faça login para começar.');
+                    window.location.href = '/login';
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Erro ao ativar conta.');
+                }
             } else {
-                const error = await response.json();
-                alert(error.message || 'Erro ao criar conta.');
+                // Registro de Novo Estúdio (Dono)
+                const response = await fetch(`${baseUrl}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: formData.name, 
+                        email: formData.email,
+                        password: formData.password,
+                        studioName: formData.studioName,
+                        planName: formData.plan
+                    }),
+                });
+
+                if (response.ok) {
+                    alert('Estúdio criado com sucesso! Redirecionando para o login...');
+                    window.location.href = '/login';
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Erro ao criar estúdio.');
+                }
             }
         } catch (error) {
             alert('Erro ao conectar com o servidor.');
@@ -89,47 +117,56 @@ export default function RegisterPage() {
             {/* Register Card */}
             <div className="w-full max-w-[550px] premium-card bg-[#151515] border-white/5 shadow-2xl relative z-10 animate-premium-fade">
                 <div className="mb-10 text-center">
-                    <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 italic">Criar Conta</h1>
+                    <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 italic">
+                        {isInvitation ? 'Ativar Acesso' : 'Criar Conta'}
+                    </h1>
                     <p className="text-secondary-text font-black uppercase tracking-widest text-[10px]">
-                        Não tem uma conta? <span className="text-gold-polished">Cadastre-se! 5 Dias Grátis!</span>
+                        {isInvitation 
+                            ? 'Complete seu cadastro para acessar o estúdio' 
+                            : 'Não tem uma conta? '}
+                        {!isInvitation && <span className="text-gold-polished">Cadastre-se! 5 Dias Grátis!</span>}
                     </p>
                 </div>
 
                 <form className="space-y-5" onSubmit={handleRegister}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <InputGroup 
-                            icon={Home} 
-                            placeholder="Nome do Estúdio..." 
-                            name="studioName" 
-                            value={formData.studioName} 
-                            onChange={handleChange} 
-                        />
+                        {!isInvitation && (
+                            <InputGroup 
+                                icon={Home} 
+                                placeholder="Nome do Estúdio..." 
+                                name="studioName" 
+                                value={formData.studioName} 
+                                onChange={handleChange} 
+                            />
+                        )}
                         <InputGroup 
                             icon={User} 
-                            placeholder="Nome do Responsável..." 
+                            placeholder="Seu Nome Completo..." 
                             name="name" 
                             value={formData.name} 
                             onChange={handleChange} 
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <InputGroup 
-                            icon={Mail} 
-                            placeholder="E-mail..." 
-                            type="email" 
-                            name="email" 
-                            value={formData.email} 
-                            onChange={handleChange} 
-                        />
-                        <InputGroup 
-                            icon={Phone} 
-                            placeholder="WhatsApp (Ex: 11999999999)" 
-                            name="phone" 
-                            value={formData.phone} 
-                            onChange={handleChange} 
-                        />
-                    </div>
+                    {!isInvitation && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <InputGroup 
+                                icon={Mail} 
+                                placeholder="E-mail..." 
+                                type="email" 
+                                name="email" 
+                                value={formData.email} 
+                                onChange={handleChange} 
+                            />
+                            <InputGroup 
+                                icon={Phone} 
+                                placeholder="WhatsApp (Ex: 11999999999)" 
+                                name="phone" 
+                                value={formData.phone} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <InputGroup 
@@ -150,26 +187,28 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
-                        <SelectGroup 
-                            icon={CreditCard} 
-                            label="Plano" 
-                            name="plan" 
-                            value={formData.plan} 
-                            onChange={handleChange}
-                        >
-                            <option value="Solo" className="bg-[#1A1A1A]">Plano Solo (1 Profissional)</option>
-                            <option value="Professional" className="bg-[#1A1A1A]">Plano Profissional (Até 3 Tatuadores)</option>
-                            <option value="Elite" className="bg-[#1A1A1A]">Plano Elite (Até 10 Tatuadores)</option>
-                        </SelectGroup>
-                    </div>
+                    {!isInvitation && (
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
+                            <SelectGroup 
+                                icon={CreditCard} 
+                                label="Plano" 
+                                name="plan" 
+                                value={formData.plan} 
+                                onChange={handleChange}
+                            >
+                                <option value="Solo" className="bg-[#1A1A1A]">Plano Solo (1 Profissional)</option>
+                                <option value="Professional" className="bg-[#1A1A1A]">Plano Profissional (Até 3 Tatuadores)</option>
+                                <option value="Elite" className="bg-[#1A1A1A]">Plano Elite (Até 10 Tatuadores)</option>
+                            </SelectGroup>
+                        </div>
+                    )}
 
                     <button 
                         type="submit" 
                         disabled={isLoading}
                         className="btn-premium w-full py-5 text-lg flex items-center justify-center gap-4 group disabled:opacity-50"
                     >
-                        {isLoading ? 'CADASTRANDO...' : 'CADASTRAR CONTA'}
+                        {isLoading ? 'PROCESSANDO...' : (isInvitation ? 'ATIVAR MEU ACESSO' : 'CADASTRAR CONTA')}
                         {!isLoading && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                     </button>
 
