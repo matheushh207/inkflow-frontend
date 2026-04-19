@@ -54,9 +54,9 @@ export default function SubscriptionBlock() {
         try {
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
             const token = localStorage.getItem('access_token');
-            const response = await fetch(`${baseUrl}/billing/subscribe`, {
+            const response = await fetch(`${baseUrl}/mercadopago/pix`, {
                 method: 'POST',
-                body: JSON.stringify({ planId, paymentMethod: 'PIX' }),
+                body: JSON.stringify({ planId }),
                 headers: { 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -166,7 +166,7 @@ export default function SubscriptionBlock() {
                             </div>
                             
                             <div>
-                                <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter">Quase lá, Guerreiro!</h2>
+                                <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter">Quase lá!</h2>
                                 <p className="text-sm text-zinc-500 font-bold uppercase tracking-widest mt-2 leading-relaxed">
                                     O código PIX foi gerado. <br /> Pague agora para liberar seu acesso instantaneamente.
                                 </p>
