@@ -32,11 +32,13 @@ export default function SettingsPage() {
         studioPhone,
         studioCnpj,
         studioLogo,
+        studioSlug,
         responsibleName,
         notificationSettings,
         updateStudioInfo,
         smtpSettings,
         updateSmtpSettings,
+        accentColor,
         team
     } = useStore();
 
@@ -55,6 +57,8 @@ export default function SettingsPage() {
         studioCnpj,
         studioPhone,
         studioLogo,
+        studioSlug,
+        accentColor,
         responsibleName,
         notifications: { ...notificationSettings },
         smtp: { ...smtpSettings }
@@ -75,11 +79,13 @@ export default function SettingsPage() {
             studioCnpj,
             studioPhone,
             studioLogo,
+            studioSlug,
+            accentColor,
             responsibleName,
             notifications: { ...notificationSettings },
             smtp: { ...smtpSettings }
         });
-    }, [studioName, studioEmail, studioCnpj, studioPhone, studioLogo, responsibleName, notificationSettings, smtpSettings]);
+    }, [studioName, studioEmail, studioCnpj, studioPhone, studioLogo, studioSlug, accentColor, responsibleName, notificationSettings, smtpSettings]);
 
     const handleSave = () => {
         setIsSaving(true);
@@ -89,6 +95,8 @@ export default function SettingsPage() {
             studioCnpj: localSettings.studioCnpj,
             studioPhone: localSettings.studioPhone,
             studioLogo: localSettings.studioLogo,
+            studioSlug: localSettings.studioSlug,
+            accentColor: localSettings.accentColor,
             responsibleName: localSettings.responsibleName,
             notificationSettings: localSettings.notifications
         });
@@ -100,7 +108,7 @@ export default function SettingsPage() {
     };
 
     const handleCopyLink = () => {
-        const link = `https://inkflowcrm.onrender.com/reserva`;
+        const link = `${window.location.origin}/reserva/${studioSlug}`;
         navigator.clipboard.writeText(link);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -409,6 +417,89 @@ export default function SettingsPage() {
                                     >
                                         <div className={`absolute top-1 w-4 h-4 rounded-full bg-black transition-all duration-300 ${security.twoFactor ? 'left-7' : 'left-1'}`} />
                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'White Label' && (
+                        <div className="space-y-8 animate-premium-fade">
+                            <div className="premium-card">
+                                <h3 className="text-lg font-bold text-white uppercase flex items-center gap-2 mb-8">
+                                    <Globe className="w-5 h-5 text-gold-polished" /> Link de Reserva Personalizado
+                                </h3>
+                                
+                                <div className="space-y-6">
+                                    <p className="text-sm text-zinc-500">Este é o seu link público para orçamentos e reservas. Você pode alterá-lo para que fique com a cara do seu estúdio.</p>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-black text-secondary-text uppercase tracking-widest ml-1">Slug do Estúdio (URL)</label>
+                                            <div className="relative">
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 text-xs font-bold">inkflow.ao/reserva/</span>
+                                                <input
+                                                    type="text"
+                                                    value={localSettings.studioSlug}
+                                                    onChange={(e) => setLocalSettings({ ...localSettings, studioSlug: e.target.value.toLowerCase().replace(/\s/g, '-') })}
+                                                    className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 pl-[115px] text-sm text-white focus:border-gold-polished transition-all outline-none"
+                                                    placeholder="meu-estudio"
+                                                />
+                                            </div>
+                                            <p className="text-[10px] text-zinc-600 italic">Apenas letras, números e hifens.</p>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-black text-secondary-text uppercase tracking-widest ml-1">Link Ativo</label>
+                                            <div className="flex gap-2">
+                                                <div className="flex-1 bg-zinc-900 border border-white/5 rounded-xl p-4 text-xs text-zinc-400 font-mono truncate">
+                                                    {typeof window !== 'undefined' ? `${window.location.host}/reserva/${studioSlug}` : ''}
+                                                </div>
+                                                <button 
+                                                    onClick={handleCopyLink}
+                                                    className="px-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-all"
+                                                >
+                                                    {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <LinkIcon className="w-4 h-4" />}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="premium-card">
+                                <h3 className="text-lg font-bold text-white uppercase flex items-center gap-2 mb-8">
+                                    <Globe className="w-5 h-5 text-gold-polished" /> Personalização de Marca
+                                </h3>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-black text-secondary-text uppercase tracking-widest ml-1">Cor de Destaque (Dashboard & Reserva)</label>
+                                        <div className="flex gap-4 items-center">
+                                            <input
+                                                type="color"
+                                                value={localSettings.accentColor}
+                                                onChange={(e) => setLocalSettings({ ...localSettings, accentColor: e.target.value })}
+                                                className="w-12 h-12 rounded-xl bg-transparent border border-premium-border cursor-pointer"
+                                            />
+                                            <div className="flex-1">
+                                                <input
+                                                    type="text"
+                                                    value={localSettings.accentColor}
+                                                    onChange={(e) => setLocalSettings({ ...localSettings, accentColor: e.target.value })}
+                                                    className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-3 text-sm text-white focus:border-gold-polished outline-none"
+                                                    placeholder="#FFD700"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-6 bg-zinc-900/50 rounded-2xl border border-white/5 flex flex-col justify-center">
+                                        <p className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-2">Visualização da Cor</p>
+                                        <div 
+                                            className="w-full h-8 rounded-lg shadow-inner"
+                                            style={{ backgroundColor: localSettings.accentColor }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

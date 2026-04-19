@@ -130,6 +130,7 @@ interface StoreState {
     studioPhone: string;
     studioCnpj: string;
     studioLogo: string;
+    studioSlug: string;
     accentColor: string;
     notificationSettings: {
         email: boolean;
@@ -208,6 +209,7 @@ const INITIAL_STATE: StoreState = {
     studioPhone: '',
     studioCnpj: '',
     studioLogo: '/logo.png',
+    studioSlug: '',
     accentColor: '#FFD700',
     notificationSettings: {
         email: true,
@@ -289,6 +291,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
                     studioPhone: data.phone,
                     studioCnpj: data.cnpj,
                     studioLogo: data.logo || prev.studioLogo,
+                    studioSlug: data.slug || '',
                     responsibleName: data.responsibleName,
                     tenantId: data.id,
                     maxArtists: data.subscriptions?.[0]?.plan?.maxArtists || 1,
@@ -300,6 +303,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
                         pass: '' // Never return pass
                     }
                 }));
+
+                // Fetch Portfolio from DB
+                const portfolioRes = await fetch(`${baseUrl}/portfolio`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (portfolioRes.ok) {
+                    const portfolioData = await portfolioRes.json();
+                    setState(prev => ({ ...prev, portfolio: portfolioData }));
+                }
             }
         } catch (error) {
             console.error("Failed to fetch studio info", error);
@@ -485,27 +497,65 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setState(prev => ({ ...prev, inventory: prev.inventory.filter(i => i.id !== id) }));
     };
 
-    const addPortfolioItem = (item: Omit<PortfolioItem, 'id' | 'views' | 'likes' | 'date' | 'isVisible'>) => {
-        const newItem: PortfolioItem = {
-            ...item,
-            id: Math.random().toString(36).substr(2, 9),
-            views: 0,
-            likes: 0,
-            date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }),
-            isVisible: true
-        };
-        setState(prev => ({ ...prev, portfolio: [newItem, ...prev.portfolio] }));
+    const addPortfolioItem = async (item: Omit<PortfolioItem, 'id' | 'views' | 'likes' | 'date' | 'isVisible'>) => {
+        try {
+            const token = localStorage.getItem('access_token');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const res = await fetch(`${baseUrl}/portfolio`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(item)
+            });
+
+            if (res.ok) {
+                const newItem = await res.json();
+                setState(prev => ({ ...prev, portfolio: [newItem, ...prev.portfolio] }));
+            }
+        } catch (error) {
+            console.error("Failed to add portfolio item", error);
+        }
     };
 
-    const deletePortfolioItem = (id: string) => {
-        setState(prev => ({ ...prev, portfolio: prev.portfolio.filter(p => p.id !== id) }));
+    const deletePortfolioItem = async (id: string) => {
+        try {
+            const token = localStorage.getItem('access_token');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            await fetch(`${baseUrl}/portfolio/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setState(prev => ({ ...prev, portfolio: prev.portfolio.filter(p => p.id !== id) }));
+        } catch (error) {
+            console.error("Failed to delete portfolio item", error);
+        }
     };
 
-    const updatePortfolioItem = (id: string, updates: Partial<PortfolioItem>) => {
-        setState(prev => ({
-            ...prev,
-            portfolio: prev.portfolio.map(p => p.id === id ? { ...p, ...updates } : p)
-        }));
+    const updatePortfolioItem = async (id: string, updates: Partial<PortfolioItem>) => {
+        try {
+            const token = localStorage.getItem('access_token');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const res = await fetch(`${baseUrl}/portfolio/${id}`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updates)
+            });
+
+            if (res.ok) {
+                const updated = await res.json();
+                setState(prev => ({
+                    ...prev,
+                    portfolio: prev.portfolio.map(p => p.id === id ? updated : p)
+                }));
+            }
+        } catch (error) {
+            console.error("Failed to update portfolio item", error);
+        }
     };
 
     const togglePortfolioLike = (id: string) => {
@@ -596,7 +646,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
             await fetch(`${baseUrl}/tenants/profile`, {
                 method: 'PATCH',
                 headers: { 
@@ -620,15 +670,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const updateSmtpSettings = async (settings: StoreState['smtpSettings']) => {
         setState(prev => ({ ...prev, smtpSettings: settings }));
 
-        // In a real app, you would call the API here
-        // For this demo/local storage version, the useEffect persistence handles it
-        // But I'll add the API call structure for clarity
         try {
-            const tenantId = '123'; // Mock tenant ID
+            const token = localStorage.getItem('access_token');
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
-            await fetch(`${baseUrl}/tenants/${tenantId}/smtp`, {
-                method: 'POST', // Changed to POST to match common implementation if PATCH fails
-                headers: { 'Content-Type': 'application/json' },
+            await fetch(`${baseUrl}/tenants/smtp`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify(settings)
             });
         } catch (error) {
