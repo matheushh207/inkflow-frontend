@@ -80,16 +80,16 @@ export default function SubscriptionBlock() {
     };
 
     return (
-        <div className="fixed inset-0 z-[1000] bg-[#0A0A0A]/95 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto pt-20 pb-20">
+        <div className="fixed inset-0 z-[1000] bg-[#0A0A0A]/95 backdrop-blur-2xl flex justify-center items-start md:items-center p-4 overflow-y-auto pt-10 pb-10">
             {/* Background Effects */}
             <div className="absolute top-0 left-0 w-full h-full stipple-bg opacity-10 pointer-events-none" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] h-[800px] bg-gold-polished/5 rounded-full blur-[150px] pointer-events-none" />
 
             <div className="w-full max-w-6xl relative z-10 animate-premium-fade">
                 {!selectedPlan ? (
-                    <div className="space-y-12">
-                        <div className="text-center space-y-4 max-w-2xl mx-auto">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full text-rose-500 mb-4 animate-bounce">
+                    <div className="space-y-8">
+                        <div className="text-center space-y-3 max-w-2xl mx-auto">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full text-rose-500 mb-2 animate-bounce">
                                 <Lock className="w-4 h-4" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em]">Acesso Bloqueado</span>
                             </div>
@@ -159,8 +159,8 @@ export default function SubscriptionBlock() {
                         </div>
                     </div>
                 ) : (
-                    <div className="max-w-2xl mx-auto animate-premium-fade">
-                        <div className="premium-card p-10 bg-zinc-950 border-gold-polished/30 text-center space-y-8 shadow-[0_0_100px_rgba(212,175,55,0.05)]">
+                    <div className="max-w-2xl mx-auto animate-premium-fade w-full">
+                        <div className="premium-card p-6 sm:p-10 bg-zinc-950 border-gold-polished/30 text-center space-y-6 shadow-[0_0_100px_rgba(212,175,55,0.05)]">
                             <div className="inline-flex p-4 bg-gold-polished/10 rounded-full mb-2">
                                 <Crown className="w-8 h-8 text-gold-polished animate-pulse" />
                             </div>
@@ -172,7 +172,7 @@ export default function SubscriptionBlock() {
                                 </p>
                             </div>
 
-                            <div className="flex flex-col items-center gap-6 py-4">
+                             <div className="flex flex-col items-center gap-4 py-2">
                                 <div className="p-4 bg-white rounded-3xl shadow-2xl transition-transform hover:scale-105 duration-500">
                                     <img 
                                         src={`data:image/png;base64,${selectedPlan.qrCodeBase64}`} 
