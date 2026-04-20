@@ -15,7 +15,7 @@ import {
     ArrowRight
 } from 'lucide-react';
 
-export default function RegisterPage() {
+function RegisterContent() {
     const [isLoading, setIsLoading] = useState(false);
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
@@ -220,6 +220,14 @@ export default function RegisterPage() {
                 </form>
             </div>
         </div>
+    );
+}
+
+export default function RegisterPage() {
+    return (
+        <React.Suspense fallback={<div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-gold-polished">Carregando...</div>}>
+            <RegisterContent />
+        </React.Suspense>
     );
 }
 
