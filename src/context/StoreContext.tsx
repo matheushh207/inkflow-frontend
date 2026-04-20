@@ -102,7 +102,7 @@ export interface TeamMember {
     name: string;
     email: string;
     role: 'Administrador' | 'Artista' | 'Suporte' | 'Recepção' | 'SUPER_ADMIN';
-    status: 'Ativo' | 'Inativo';
+    status: 'Ativo' | 'Inativo' | 'Pendente';
     appointmentsCount: number;
     commission: number; // Percentage
     permissions: {
