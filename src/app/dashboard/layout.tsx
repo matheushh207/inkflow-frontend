@@ -138,7 +138,7 @@ export default function DashboardLayout({
         }
 
         // Default permission check
-        if (item.permission === 'any' || role === 'Administrador' || role === 'ADMIN') return true;
+        if (item.permission === 'any' || role === 'Administrador' || (role as string) === 'ADMIN') return true;
         
         // If not admin and has permissions array (for custom team members)
         if (!currentUser?.permissions) return false;
