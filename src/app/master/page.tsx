@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function SuperAdminDashboard() {
+export default function MasterDashboard() {
     const [stats, setStats] = useState<any>(null);
     const [tenants, setTenants] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +44,7 @@ export default function SuperAdminDashboard() {
                 ]);
 
                 if (statsRes.status === 403) {
-                    alert('Acesso negado. Apenas Super Admins podem acessar esta área.');
+                    alert('Acesso negado. Apenas o MASTER do sistema pode acessar esta área.');
                     window.location.href = '/dashboard';
                     return;
                 }
@@ -137,9 +137,9 @@ export default function SuperAdminDashboard() {
                     <div>
                         <div className="flex items-center gap-3 mb-2">
                             <ShieldCheck className="w-5 h-5 text-gold-polished" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-polished">Torre de Comando SaaS</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-gold-polished">Torre de Comando MASTER</span>
                         </div>
-                        <h1 className="text-4xl font-black uppercase tracking-tighter italic">Gestão <span className="text-gold-polished">InkFlow</span></h1>
+                        <h1 className="text-4xl font-black uppercase tracking-tighter italic">Gestão <span className="text-gold-polished">InkFlow MASTER</span></h1>
                     </div>
                     
                     <div className="flex items-center gap-4">

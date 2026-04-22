@@ -101,7 +101,7 @@ export interface TeamMember {
     id: string;
     name: string;
     email: string;
-    role: 'Administrador' | 'Artista' | 'Suporte' | 'Recepção' | 'SUPER_ADMIN';
+    role: 'Administrador' | 'Artista' | 'Suporte' | 'Recepção' | 'MASTER';
     status: 'Ativo' | 'Inativo' | 'Pendente';
     appointmentsCount: number;
     commission: number; // Percentage
@@ -319,22 +319,127 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const syncDataWithBackend = async () => {
+        const token = localStorage.getItem('access_token');
+        if (!token) return;
+
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+        try {
+            // Fetch Clients
+            const clientsRes = await fetch(`${baseUrl}/clients`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (clientsRes.ok) {
+                const clientsData = await clientsRes.json();
+                setState(prev => ({ ...prev, clients: clientsData }));
+            }
+
+            // Fetch Appointments
+            const appRes = await fetch(`${baseUrl}/appointments`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (appRes.ok) {
+                const appData = await appRes.json();
+                // Map backend appointment to frontend structure if necessary
+                const mappedApps: Appointment[] = appData.map((a: any) => ({
+                    id: a.id,
+                    clientId: a.clientId,
+                    clientName: a.client?.name || 'Cliente',
+                    artist: a.artist?.name || 'Artista',
+                    service: a.service || 'Tattoo',
+                    date: new Date(a.date).toLocaleDateString('pt-BR'),
+                    time: a.time || '00:00',
+                    status: a.status,
+                    value: a.value
+                }));
+                setState(prev => ({ ...prev, appointments: mappedApps }));
+            }
+
+            // Fetch Budgets
+            const budgetRes = await fetch(`${baseUrl}/budgets`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (budgetRes.ok) {
+                const budgetData = await budgetRes.json();
+                const mappedBudgets: Budget[] = budgetData.map((b: any) => ({
+                    id: b.id,
+                    title: b.title,
+                    clientName: b.clientName,
+                    clientId: b.clientId,
+                    value: b.value,
+                    status: b.status,
+                    source: b.source,
+                    description: b.description || '',
+                    images: b.images || [],
+                    date: new Date(b.createdAt).toLocaleDateString('pt-BR')
+                }));
+                setState(prev => ({ ...prev, budgets: mappedBudgets }));
+            }
+
+            // Fetch Transactions
+            const txRes = await fetch(`${baseUrl}/financial`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (txRes.ok) {
+                const txData = await txRes.json();
+                const mappedTx: Transaction[] = txData.map((t: any) => ({
+                    id: t.id,
+                    type: t.type,
+                    amount: t.amount,
+                    date: new Date(t.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    category: t.category,
+                    description: t.description || '',
+                    paymentMethod: t.method || 'Não especificado'
+                }));
+                setState(prev => ({ ...prev, transactions: mappedTx }));
+            }
+
+        } catch (error) {
+            console.error("Failed to sync data with backend", error);
+        }
+    };
+
     useEffect(() => {
         if (isLoaded) {
             fetchStudioInfo();
+            syncDataWithBackend();
         }
     }, [isLoaded]);
 
     // --- ACTIONS ---
 
-    const addClient = (client: Omit<Client, 'id' | 'createdAt' | 'totalSpent'>) => {
+    const addClient = async (client: Omit<Client, 'id' | 'createdAt' | 'totalSpent'>) => {
+        const optimisticId = Math.random().toString(36).substr(2, 9);
         const newClient: Client = {
             ...client,
-            id: Math.random().toString(36).substr(2, 9),
+            id: optimisticId,
             createdAt: new Date().toISOString(),
             totalSpent: 0
         };
         setState(prev => ({ ...prev, clients: [newClient, ...prev.clients] }));
+
+        try {
+            const token = localStorage.getItem('access_token');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const res = await fetch(`${baseUrl}/clients`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(client)
+            });
+            if (res.ok) {
+                const saved = await res.json();
+                setState(prev => ({
+                    ...prev,
+                    clients: prev.clients.map(c => c.id === optimisticId ? saved : c)
+                }));
+            }
+        } catch (e) {
+            console.error("Failed to sync client", e);
+        }
     };
 
     const updateClient = (id: string, updates: Partial<Client>) => {
@@ -442,13 +547,43 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setState(prev => ({ ...prev, budgets: prev.budgets.filter(b => b.id !== id) }));
     };
 
-    const addTransaction = (tx: Omit<Transaction, 'id' | 'date'>) => {
+    const addTransaction = async (tx: Omit<Transaction, 'id' | 'date'>) => {
+        const optimisticId = Math.random().toString(36).substr(2, 9);
         const newTx: Transaction = {
             ...tx,
-            id: Math.random().toString(36).substr(2, 9),
+            id: optimisticId,
             date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
         };
         setState(prev => ({ ...prev, transactions: [newTx, ...prev.transactions] }));
+
+        try {
+            const token = localStorage.getItem('access_token');
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const res = await fetch(`${baseUrl}/financial`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    ...tx,
+                    method: tx.paymentMethod
+                })
+            });
+            if (res.ok) {
+                const saved = await res.json();
+                setState(prev => ({
+                    ...prev,
+                    transactions: prev.transactions.map(t => t.id === optimisticId ? {
+                        ...saved,
+                        date: new Date(saved.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }),
+                        paymentMethod: saved.method
+                    } : t)
+                }));
+            }
+        } catch (e) {
+            console.error("Failed to sync transaction", e);
+        }
     };
 
     const deleteTransaction = (id: string) => {

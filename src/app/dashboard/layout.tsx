@@ -36,20 +36,20 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const MENU_ITEMS = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard', permission: 'any' },
-    { icon: Calendar, label: 'Agenda Estudio', href: '/dashboard/agenda', permission: 'agenda' },
-    { icon: ClipboardList, label: 'Agendamentos', href: '/dashboard/appointments', permission: 'agenda' },
-    { icon: Users, label: 'Clientes CRM', href: '/dashboard/clients', permission: 'clientes' },
-    { icon: BarChart3, label: 'Orçamentos', href: '/dashboard/budgets', permission: 'any' }, // budgets generally visible or linked to agenda
-    { icon: DollarSign, label: 'Financeiro', href: '/dashboard/finance', permission: 'financeiro' },
-    { icon: Package, label: 'Estoque', href: '/dashboard/inventory', permission: 'estoque' },
-    { icon: CreditCard, label: 'Assinatura', href: '/dashboard/billing', permission: 'any' },
-    { icon: User, label: 'Equipe', href: '/dashboard/users', permission: 'configuracoes' },
-    { icon: HeartPulse, label: 'Anamnese', href: '/dashboard/anamnesis', permission: 'agenda' },
-    { icon: FileSignature, label: 'Consentimento', href: '/dashboard/consent', permission: 'agenda' },
-    { icon: ImageIcon, label: 'Portfólio', href: '/dashboard/portfolio', permission: 'any' },
-    { icon: Headset, label: 'Suporte 24h', href: 'https://wa.me/5500000000000', permission: 'any', highlight: true },
-    { icon: Settings, label: 'Configurações', href: '/dashboard/settings', permission: 'configuracoes' },
+    { icon: LayoutDashboard, label: 'Resumo / Dashboard', href: '/dashboard', permission: 'any' },
+    { icon: Calendar, label: 'Minha Agenda', href: '/dashboard/agenda', permission: 'agenda' },
+    { icon: ClipboardList, label: 'Controle de Agendamentos', href: '/dashboard/appointments', permission: 'agenda' },
+    { icon: Users, label: 'Gestão de Clientes', href: '/dashboard/clients', permission: 'clientes' },
+    { icon: BarChart3, label: 'Painel de Orçamentos', href: '/dashboard/budgets', permission: 'any' },
+    { icon: DollarSign, label: 'Controle Financeiro', href: '/dashboard/finance', permission: 'financeiro' },
+    { icon: Package, label: 'Controle de Estoque', href: '/dashboard/inventory', permission: 'estoque' },
+    { icon: CreditCard, label: 'Minha Assinatura', href: '/dashboard/billing', permission: 'any' },
+    { icon: User, label: 'Equipe e Artistas', href: '/dashboard/users', permission: 'configuracoes' },
+    { icon: HeartPulse, label: 'Fichas de Anamnese', href: '/dashboard/anamnesis', permission: 'agenda' },
+    { icon: FileSignature, label: 'Termos Consentimento', href: '/dashboard/consent', permission: 'agenda' },
+    { icon: ImageIcon, label: 'Meu Portfólio', href: '/dashboard/portfolio', permission: 'any' },
+    { icon: Headset, label: 'Suporte InkFlow 24h', href: 'https://wa.me/5500000000000', permission: 'any', highlight: true },
+    { icon: Settings, label: 'Ajustes e Configurações', href: '/dashboard/settings', permission: 'configuracoes' },
 ];
 
 export default function DashboardLayout({
@@ -69,18 +69,18 @@ export default function DashboardLayout({
 
     // Get current user details dynamically
     const currentUser = team.find(m => m.id === currentUserId) || team[0];
-    const isSuperAdmin = currentUser?.email === 'admin@inkflow.com' && currentUser?.role === 'SUPER_ADMIN';
+    const isMaster = currentUser?.email === 'admin@inkflow.com' && currentUser?.role === 'MASTER';
 
     React.useEffect(() => {
-        if (isSuperAdmin && pathname.startsWith('/dashboard')) {
-            router.push('/super-admin');
+        if (isMaster && pathname.startsWith('/dashboard')) {
+            router.push('/master');
         }
-    }, [isSuperAdmin, pathname, router]);
+    }, [isMaster, pathname, router]);
 
     // Check Subscription Status
     useEffect(() => {
         const checkSubscription = async () => {
-            if (isSuperAdmin) {
+            if (isMaster) {
                 setIsCheckingSubscription(false);
                 return;
             }
@@ -104,7 +104,7 @@ export default function DashboardLayout({
         };
 
         checkSubscription();
-    }, [isSuperAdmin]);
+    }, [isMaster]);
 
     const handleLogout = () => {
         router.push('/login');
@@ -113,8 +113,8 @@ export default function DashboardLayout({
     const filteredMenu = MENU_ITEMS.filter(item => {
         if (!currentUser) return false;
         
-        // Super Admin gets everything (filtered by redirect usually)
-        if (currentUser.role === 'SUPER_ADMIN') return true;
+        // Master gets everything (filtered by redirect usually)
+        if (currentUser.role === 'MASTER') return true;
 
         const role = currentUser.role;
 
@@ -149,13 +149,13 @@ export default function DashboardLayout({
                 </div>
 
                 <nav className="flex-1 p-4 space-y-1 overflow-y-auto sidebar-scroll">
-                    {isSuperAdmin && (
+                    {isMaster && (
                         <Link
-                            href="/super-admin"
+                            href="/master"
                             className="flex items-center gap-3 px-5 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-gold-polished text-black shadow-[0_10px_25px_rgba(212,175,55,0.25)] mb-6 hover:scale-[1.03] active:scale-95 transition-all text-center justify-center font-black"
                         >
                             <ShieldAlert className="w-4 h-4" />
-                            Torre de Comando
+                            Torre de Comando MASTER
                         </Link>
                     )}
                     {filteredMenu.map((item) => {
@@ -327,7 +327,7 @@ export default function DashboardLayout({
                 </header>
 
                 <div className="flex-1 overflow-y-auto p-3 md:p-8 scrollbar-hide">
-                    {isExpired && !isSuperAdmin && !pathname.includes('/billing') ? (
+                    {isExpired && !isMaster && !pathname.includes('/billing') ? (
                         <SubscriptionBlock />
                     ) : (
                         children

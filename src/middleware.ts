@@ -25,19 +25,19 @@ export function middleware(request: NextRequest) {
     const userRole = request.cookies.get('user_role')?.value;
     const userEmail = request.cookies.get('user_email')?.value;
 
-    // 3. Super Admin Restriction (Rigorosa)
-    const isSuperAdminEmail = userEmail === 'admin@inkflow.com';
-    const hasSuperAdminRole = userRole === 'SUPER_ADMIN';
-    const isActuallySuperAdmin = isSuperAdminEmail && hasSuperAdminRole;
+    // 3. MASTER Restriction (Rigorosa)
+    const isMasterEmail = userEmail === 'admin@inkflow.com';
+    const hasMasterRole = userRole === 'MASTER';
+    const isActuallyMaster = isMasterEmail && hasMasterRole;
 
-    if (isActuallySuperAdmin) {
-        // O Super Admin VERDADEIRO deve estar apenas na Torre de Comando
-        if (!pathname.startsWith('/super-admin') && !pathname.startsWith('/api')) {
-            return NextResponse.redirect(new URL('/super-admin', request.url));
+    if (isActuallyMaster) {
+        // O MASTER VERDADEIRO deve estar apenas na Torre de Comando
+        if (!pathname.startsWith('/master') && !pathname.startsWith('/api')) {
+            return NextResponse.redirect(new URL('/master', request.url));
         }
     } else {
-        // Qualquer outro usuário (mesmo se tiver a role SUPER_ADMIN por erro) não pode acessar a Torre de Comando
-        if (pathname.startsWith('/super-admin')) {
+        // Qualquer outro usuário (mesmo se tiver a role MASTER por erro) não pode acessar a Torre de Comando
+        if (pathname.startsWith('/master')) {
             return NextResponse.redirect(new URL('/dashboard', request.url));
         }
     }
