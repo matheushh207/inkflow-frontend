@@ -441,7 +441,7 @@ export default function SettingsPage() {
                                                     type="text"
                                                     value={localSettings.studioSlug}
                                                     onChange={(e) => setLocalSettings({ ...localSettings, studioSlug: e.target.value.toLowerCase().replace(/\s/g, '-') })}
-                                                    className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 pl-[260px] text-sm text-white focus:border-gold-polished transition-all outline-none"
+                                                    className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 pl-[310px] text-sm text-white focus:border-gold-polished transition-all outline-none"
                                                     placeholder="meu-estudio"
                                                 />
                                             </div>
