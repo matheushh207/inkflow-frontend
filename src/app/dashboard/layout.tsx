@@ -130,18 +130,18 @@ export default function DashboardLayout({
         const role = activeRole || 'Administrador';
 
         // Role-based restrictions
-        if (role === 'Artista' || role === 'ARTIST') {
+        if (role === 'Artista' || (role as string) === 'ARTIST') {
             const forbiddenForArtists = ['Controle Financeiro', 'Equipe e Artistas', 'Ajustes e Configurações', 'Minha Assinatura', 'Controle de Estoque'];
             if (forbiddenForArtists.includes(item.label)) return false;
         }
 
-        if (role === 'Recepção' || role === 'RECEPTIONIST' || role === 'Suporte') {
+        if (role === 'Recepção' || (role as string) === 'RECEPTIONIST' || role === 'Suporte') {
             const forbiddenForReception = ['Controle Financeiro', 'Equipe e Artistas', 'Minha Assinatura', 'Ajustes e Configurações'];
             if (forbiddenForReception.includes(item.label)) return false;
         }
 
         // Se chegou aqui e é owner/admin, garante acesso
-        if (role === 'Administrador' || role === 'ADMIN' || !currentUser) return true;
+        if (role === 'Administrador' || (role as string) === 'ADMIN' || !currentUser) return true;
         
         // Se tem array de permissões customizado (equipe secundaria)
         if (currentUser?.permissions) {
