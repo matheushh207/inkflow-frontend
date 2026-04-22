@@ -67,9 +67,19 @@ export default function DashboardLayout({
 
     const unreadCount = notifications.filter(n => !n.read).length;
 
-    // Get current user details dynamically
+    // Get current user details dynamically and read cookies for real auth
+    let realRole = 'Administrador';
+    let realEmail = '';
+    if (typeof document !== 'undefined') {
+        const roleMatch = document.cookie.match(new RegExp('(^| )user_role=([^;]+)'));
+        if (roleMatch) realRole = decodeURIComponent(roleMatch[2]);
+        const emailMatch = document.cookie.match(new RegExp('(^| )user_email=([^;]+)'));
+        if (emailMatch) realEmail = decodeURIComponent(emailMatch[2]);
+    }
+
     const currentUser = team.find(m => m.id === currentUserId) || team[0];
-    const isMaster = currentUser?.email === 'admin@inkflow.com' && currentUser?.role === 'MASTER';
+    const activeRole = currentUser?.role || (realRole === 'ADMIN' ? 'Administrador' : realRole);
+    const isMaster = (realEmail === 'admin@inkflow.com' && realRole === 'MASTER') || (currentUser?.email === 'admin@inkflow.com' && currentUser?.role === 'MASTER');
 
     React.useEffect(() => {
         if (isMaster && pathname.startsWith('/dashboard')) {
@@ -111,27 +121,27 @@ export default function DashboardLayout({
     };
 
     const filteredMenu = MENU_ITEMS.filter(item => {
-        if (!currentUser) return false;
-        
-        // Master gets everything (filtered by redirect usually)
-        if (currentUser.role === 'MASTER') return true;
+        // Master gets everything
+        if (isMaster) return true;
 
-        const role = currentUser.role;
+        const role = activeRole;
 
-        // Role-based restrictions
+        // Role-based restrictions (Using exactly the translated labels)
         if (role === 'Artista') {
-            const forbiddenForArtists = ['Financeiro', 'Equipe', 'Configurações', 'Assinatura', 'Estoque'];
+            const forbiddenForArtists = ['Controle Financeiro', 'Equipe e Artistas', 'Ajustes e Configurações', 'Minha Assinatura', 'Controle de Estoque'];
             if (forbiddenForArtists.includes(item.label)) return false;
         }
 
         if (role === 'Recepção' || role === 'Suporte') {
-            const forbiddenForReception = ['Financeiro', 'Equipe', 'Assinatura', 'Configurações'];
+            const forbiddenForReception = ['Controle Financeiro', 'Equipe e Artistas', 'Minha Assinatura', 'Ajustes e Configurações'];
             if (forbiddenForReception.includes(item.label)) return false;
         }
 
         // Default permission check
-        if (item.permission === 'any') return true;
-        if (!currentUser.permissions) return false;
+        if (item.permission === 'any' || role === 'Administrador' || role === 'ADMIN') return true;
+        
+        // If not admin and has permissions array (for custom team members)
+        if (!currentUser?.permissions) return false;
         const permissionKey = item.permission as keyof typeof currentUser.permissions;
         return currentUser.permissions[permissionKey];
     });
