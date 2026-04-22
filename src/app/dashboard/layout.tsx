@@ -123,27 +123,33 @@ export default function DashboardLayout({
     const filteredMenu = MENU_ITEMS.filter(item => {
         // Master gets everything
         if (isMaster) return true;
+        
+        // Items with 'any' permission ALWAYS show
+        if (item.permission === 'any') return true;
 
-        const role = activeRole;
+        const role = activeRole || 'Administrador';
 
-        // Role-based restrictions (Using exactly the translated labels)
-        if (role === 'Artista') {
+        // Role-based restrictions
+        if (role === 'Artista' || role === 'ARTIST') {
             const forbiddenForArtists = ['Controle Financeiro', 'Equipe e Artistas', 'Ajustes e Configurações', 'Minha Assinatura', 'Controle de Estoque'];
             if (forbiddenForArtists.includes(item.label)) return false;
         }
 
-        if (role === 'Recepção' || role === 'Suporte') {
+        if (role === 'Recepção' || role === 'RECEPTIONIST' || role === 'Suporte') {
             const forbiddenForReception = ['Controle Financeiro', 'Equipe e Artistas', 'Minha Assinatura', 'Ajustes e Configurações'];
             if (forbiddenForReception.includes(item.label)) return false;
         }
 
-        // Default permission check
-        if (item.permission === 'any' || role === 'Administrador' || (role as string) === 'ADMIN') return true;
+        // Se chegou aqui e é owner/admin, garante acesso
+        if (role === 'Administrador' || role === 'ADMIN' || !currentUser) return true;
         
-        // If not admin and has permissions array (for custom team members)
-        if (!currentUser?.permissions) return false;
-        const permissionKey = item.permission as keyof typeof currentUser.permissions;
-        return currentUser.permissions[permissionKey];
+        // Se tem array de permissões customizado (equipe secundaria)
+        if (currentUser?.permissions) {
+            const permissionKey = item.permission as keyof typeof currentUser.permissions;
+            return currentUser.permissions[permissionKey];
+        }
+
+        return false;
     });
 
     return (
