@@ -14,7 +14,7 @@ export default function RegisterPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const response = await fetch('http://localhost:3001/auth/register', {
+        const response = await fetch('https://inkflow-backend-73a5.onrender.com/auth/register', {
             method: 'POST',
             body: JSON.stringify(formData),
             headers: { 'Content-Type': 'application/json' }

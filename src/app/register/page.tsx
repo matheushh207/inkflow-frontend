@@ -40,7 +40,7 @@ function RegisterContent() {
 
         setIsLoading(true);
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             
             if (isInvitation) {
                 // Aceitar Convite (Membro da Equipe)

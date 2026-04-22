@@ -278,7 +278,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (!token) return;
 
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             const res = await fetch(`${baseUrl}/tenants/profile`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -323,7 +323,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const token = localStorage.getItem('access_token');
         if (!token) return;
 
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
 
         try {
             // Fetch Clients
@@ -421,7 +421,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             const res = await fetch(`${baseUrl}/clients`, {
                 method: 'POST',
                 headers: { 
@@ -459,7 +459,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setState(prev => ({ ...prev, appointments: [newApp, ...prev.appointments] }));
 
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             await fetch(`${baseUrl}/appointments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -513,7 +513,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         try {
             // Find client email if possible
             const client = state.clients.find(c => c.id === budget.clientId);
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
 
             await fetch(`${baseUrl}/budgets`, {
                 method: 'POST',
@@ -558,7 +558,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             const res = await fetch(`${baseUrl}/financial`, {
                 method: 'POST',
                 headers: { 
@@ -636,7 +636,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const addPortfolioItem = async (item: Omit<PortfolioItem, 'id' | 'views' | 'likes' | 'date' | 'isVisible'>) => {
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             const res = await fetch(`${baseUrl}/portfolio`, {
                 method: 'POST',
                 headers: { 
@@ -658,7 +658,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const deletePortfolioItem = async (id: string) => {
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             await fetch(`${baseUrl}/portfolio/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -672,7 +672,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const updatePortfolioItem = async (id: string, updates: Partial<PortfolioItem>) => {
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             const res = await fetch(`${baseUrl}/portfolio/${id}`, {
                 method: 'PATCH',
                 headers: { 
@@ -782,7 +782,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             await fetch(`${baseUrl}/tenants/profile`, {
                 method: 'PATCH',
                 headers: { 
@@ -808,7 +808,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             await fetch(`${baseUrl}/tenants/smtp`, {
                 method: 'PATCH',
                 headers: { 
@@ -835,7 +835,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
         try {
             const token = localStorage.getItem('access_token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             await fetch(`${baseUrl}/notifications/${id}/read`, {
                 method: 'PATCH',
                 headers: { 'Authorization': `Bearer ${token}` }

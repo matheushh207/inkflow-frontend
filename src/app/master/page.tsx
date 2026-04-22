@@ -30,7 +30,7 @@ export default function MasterDashboard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
                 const token = localStorage.getItem('access_token');
 
                 if (!token) {
@@ -73,7 +73,7 @@ export default function MasterDashboard() {
         if (!confirm(`Deseja aplicar ${percentage}% de desconto e enviar um e-mail de oferta profissional para este estúdio?`)) return;
         
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             const token = localStorage.getItem('access_token');
             const res = await fetch(`${baseUrl}/admin/tenants/${tenantId}/discount`, {
                 method: 'PATCH',
@@ -98,7 +98,7 @@ export default function MasterDashboard() {
         if (!confirm(msg)) return;
 
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             const token = localStorage.getItem('access_token');
             const res = await fetch(`${baseUrl}/admin/tenants/${tenantId}/extend`, {
                 method: 'PATCH',

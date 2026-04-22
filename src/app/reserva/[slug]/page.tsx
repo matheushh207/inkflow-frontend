@@ -43,7 +43,7 @@ export default function ReservaPublicaDinamicaPage() {
         images: [] as string[]
     });
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
 
     useEffect(() => {
         if (!slug) return;

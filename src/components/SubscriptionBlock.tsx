@@ -52,7 +52,7 @@ export default function SubscriptionBlock() {
     const handleSubscribe = async (planId: string) => {
         setLoading(true);
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-90nn.onrender.com';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inkflow-backend-73a5.onrender.com';
             const token = localStorage.getItem('access_token');
             const response = await fetch(`${baseUrl}/mercadopago/pix`, {
                 method: 'POST',
