@@ -205,6 +205,7 @@ export default function ConsentPage() {
                                                 }}
                                                 className="p-2 hover:bg-zinc-800 rounded-lg text-secondary-text transition-all hover:text-white"
                                                 title="Reimprimir"
+                                            >
                                                 <Printer className="w-3.5 h-3.5" />
                                             </button>
                                             <button 

@@ -754,13 +754,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         });
     };
 
-    const recordAnamnesisPrint = (clientId: string) => {
-        setState(prev => {
-            const client = prev.clients.find(c => c.id === clientId);
-            if (!client) return prev;
-            const record: AnamnesisPrintRecord = {
-                id: Math.random().toString(36).substr(2, 9),
-                clientId: client.id,
+
     const deleteConsentPrintHistory = useCallback((id: string) => {
         setState(prev => ({
             ...prev,
