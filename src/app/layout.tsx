@@ -5,13 +5,6 @@ import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
 
 const inter = Inter({ subsets: ["latin"] });
-import { UnifrakturMaguntia } from "next/font/google";
-
-const gothic = UnifrakturMaguntia({ 
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-gothic",
-});
 
 export const metadata: Metadata = {
   title: "INK FLOW - Tattoo Studio Management",
@@ -34,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.className} ${gothic.variable}`}>
+      <body className={inter.className}>
         <StoreProvider>
           {children}
         </StoreProvider>

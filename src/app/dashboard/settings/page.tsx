@@ -436,12 +436,12 @@ export default function SettingsPage() {
                                         <div className="space-y-2">
                                             <label className="text-xs font-black text-secondary-text uppercase tracking-widest ml-1">Slug do Estúdio (URL)</label>
                                             <div className="relative">
-                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 text-xs font-bold">inkflow.ao/reserva/</span>
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 text-xs font-bold">inkflow-frontend-on53.onrender.com/reserva/</span>
                                                 <input
                                                     type="text"
                                                     value={localSettings.studioSlug}
                                                     onChange={(e) => setLocalSettings({ ...localSettings, studioSlug: e.target.value.toLowerCase().replace(/\s/g, '-') })}
-                                                    className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 pl-[115px] text-sm text-white focus:border-gold-polished transition-all outline-none"
+                                                    className="w-full bg-[#0A0A0A] border border-premium-border rounded-xl p-4 pl-[260px] text-sm text-white focus:border-gold-polished transition-all outline-none"
                                                     placeholder="meu-estudio"
                                                 />
                                             </div>

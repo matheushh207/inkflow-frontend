@@ -184,7 +184,9 @@ interface StoreContextType extends StoreState {
     deleteConsentTerm: (id: string) => void;
     updateConsentTerm: (id: string, updates: Partial<ConsentTerm>) => void;
     recordConsentPrint: (input: { termName: string; termVersion: string; clientId: string }) => void;
+    deleteConsentPrintHistory: (id: string) => void;
     recordAnamnesisPrint: (clientId: string) => void;
+    deleteAnamnesisPrint: (id: string) => void;
     updateStudioName: (name: string) => void;
     updateStudioInfo: (info: Partial<StoreState>) => void;
     updateSmtpSettings: (settings: StoreState['smtpSettings']) => Promise<void>;
@@ -759,19 +761,41 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             const record: AnamnesisPrintRecord = {
                 id: Math.random().toString(36).substr(2, 9),
                 clientId: client.id,
-                clientName: client.name,
-                createdAt: new Date().toISOString(),
-            };
-            return {
-                ...prev,
-                anamnesisPrintHistory: [record, ...prev.anamnesisPrintHistory],
-            };
-        });
-    };
+    const deleteConsentPrintHistory = useCallback((id: string) => {
+        setState(prev => ({
+            ...prev,
+            consentPrintHistory: prev.consentPrintHistory.filter(item => item.id !== id)
+        }));
+    }, []);
 
-    const updateStudioName = (name: string) => {
+    const recordAnamnesisPrint = useCallback((clientId: string) => {
+        const client = state.clients.find(c => c.id === clientId);
+        if (!client) return;
+
+        setState(prev => ({
+            ...prev,
+            anamnesisPrintHistory: [
+                {
+                    id: Math.random().toString(36).substr(2, 9),
+                    clientId,
+                    clientName: client.name,
+                    createdAt: new Date().toISOString()
+                },
+                ...prev.anamnesisPrintHistory
+            ]
+        }));
+    }, [state.clients]);
+
+    const deleteAnamnesisPrint = useCallback((id: string) => {
+        setState(prev => ({
+            ...prev,
+            anamnesisPrintHistory: prev.anamnesisPrintHistory.filter(item => item.id !== id)
+        }));
+    }, []);
+
+    const updateStudioName = useCallback((name: string) => {
         setState(prev => ({ ...prev, studioName: name }));
-    };
+    }, []);
 
     const updateStudioInfo = async (info: Partial<StoreState>) => {
         // Optimistic update
@@ -888,7 +912,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             deleteConsentTerm,
             updateConsentTerm,
             recordConsentPrint,
+            deleteConsentPrintHistory,
             recordAnamnesisPrint,
+            deleteAnamnesisPrint,
             updateAppointmentStatus,
             deleteAppointment,
             updateBudgetValue,

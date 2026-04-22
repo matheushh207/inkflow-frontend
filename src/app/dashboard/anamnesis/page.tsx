@@ -11,14 +11,15 @@ import {
     X,
     ClipboardCheck,
     Printer,
-    Download
+    Download,
+    Trash2
 } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useStore } from '@/context/StoreContext';
 
 export default function AnamnesisPage() {
-    const { clients, anamnesisPrintHistory, recordAnamnesisPrint, studioName } = useStore();
+    const { clients, anamnesisPrintHistory, recordAnamnesisPrint, deleteAnamnesisPrint, studioName } = useStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState('');
     const [showPrintView, setShowPrintView] = useState(false);
@@ -47,7 +48,7 @@ export default function AnamnesisPage() {
                 <div className="max-w-3xl mx-auto space-y-8 font-serif leading-relaxed">
                     {/* Header */}
                     <div className="text-center border-b-2 border-black pb-6 space-y-2">
-                        <h1 className="text-4xl font-black uppercase tracking-tighter" style={{ fontFamily: 'var(--font-gothic), serif' }}>
+                        <h1 className="text-4xl font-black uppercase tracking-tighter">
                             {studioName || 'STUDIO'}
                         </h1>
                         <p className="text-[12px] uppercase font-bold tracking-widest mt-1">Ficha de Anamnese & Consentimento Informado</p>
@@ -171,8 +172,12 @@ export default function AnamnesisPage() {
                                     >
                                         <Printer className="w-3.5 h-3.5" /> Imprimir Anamnese
                                     </button>
-                                    <button className="p-2 bg-zinc-800 text-secondary-text rounded-lg hover:text-white transition-all">
-                                        <FileText className="w-4 h-4" />
+                                    <button 
+                                        onClick={() => deleteAnamnesisPrint(r.id)}
+                                        className="p-2 bg-zinc-800 text-secondary-text rounded-lg hover:text-rose-500 hover:bg-rose-500/10 transition-all"
+                                        title="Excluir Histórico"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
                             </div>
