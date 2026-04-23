@@ -92,7 +92,7 @@ export default function AnamnesisPage() {
 
                         {printReason === 'Atualização Semestral' && (
                             <div className="space-y-4 text-xs">
-                                <p className="italic">"Declaro que, desde minha última avaliação, não houve alterações significativas em meu quadro de saúde, exceto pelo que segue abaixo:"</p>
+                                <p className="italic">&quot;Declaro que, desde minha última avaliação, não houve alterações significativas em meu quadro de saúde, exceto pelo que segue abaixo:&quot;</p>
                                 <div className="space-y-2">
                                     <p>Surgiu alguma nova alergia? ( ) Sim ( ) Não. Qual? ________________________</p>
                                     <p>Iniciou algum novo medicamento? ( ) Sim ( ) Não. Qual? ________________________</p>
