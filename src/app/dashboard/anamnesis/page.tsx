@@ -22,6 +22,7 @@ export default function AnamnesisPage() {
     const { clients, anamnesisPrintHistory, recordAnamnesisPrint, deleteAnamnesisPrint, studioName } = useStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState('');
+    const [printReason, setPrintReason] = useState('Novo Procedimento');
     const [showPrintView, setShowPrintView] = useState(false);
 
     const selectedClient = clients.find(c => c.id === selectedClientId);
@@ -51,7 +52,11 @@ export default function AnamnesisPage() {
                         <h1 className="text-4xl font-black uppercase tracking-tighter">
                             {studioName || 'STUDIO'}
                         </h1>
-                        <p className="text-[12px] uppercase font-bold tracking-widest mt-1">Ficha de Anamnese & Consentimento Informado</p>
+                        <p className="text-[12px] uppercase font-bold tracking-widest mt-1">
+                            {printReason === 'Novo Procedimento' && 'Ficha de Anamnese & Consentimento Informado'}
+                            {printReason === 'Atualização Semestral' && 'Atualização de Cadastro & Saúde'}
+                            {printReason === 'Revisão Pós-Tattoo' && 'Ficha de Acompanhamento & Revisão'}
+                        </p>
                     </div>
 
                     {/* Client Info */}
@@ -68,28 +73,69 @@ export default function AnamnesisPage() {
 
                     {/* Clinical Questions */}
                     <div className="space-y-4">
-                        <h4 className="font-bold border-l-4 border-black pl-3 uppercase text-sm">Questionário Clínico</h4>
-                        <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-xs">
-                            <p>Possui diabetes? ( ) Sim ( ) Não</p>
-                            <p>Possui epilepsia? ( ) Sim ( ) Não</p>
-                            <p>Cicatrização queloide? ( ) Sim ( ) Não</p>
-                            <p>Problemas cardíacos? ( ) Sim ( ) Não</p>
-                            <p>Alergia a pigmentos? ( ) Sim ( ) Não</p>
-                            <p>Uso de anticoagulantes? ( ) Sim ( ) Não</p>
-                            <p>Gestante ou lactante? ( ) Sim ( ) Não</p>
-                            <p>Hepatite ou HIV? ( ) Sim ( ) Não</p>
-                        </div>
-                        <div className="text-xs space-y-2">
-                            <p><strong>Medicamentos em uso:</strong> ____________________________________________________</p>
-                            <p><strong>Alergias conhecidas:</strong> ____________________________________________________</p>
-                        </div>
+                        <h4 className="font-bold border-l-4 border-black pl-3 uppercase text-sm">
+                            {printReason === 'Revisão Pós-Tattoo' ? 'Avaliação de Cicatrização' : 'Questionário Clínico'}
+                        </h4>
+                        
+                        {printReason === 'Novo Procedimento' && (
+                            <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-xs">
+                                <p>Possui diabetes? ( ) Sim ( ) Não</p>
+                                <p>Possui epilepsia? ( ) Sim ( ) Não</p>
+                                <p>Cicatrização queloide? ( ) Sim ( ) Não</p>
+                                <p>Problemas cardíacos? ( ) Sim ( ) Não</p>
+                                <p>Alergia a pigmentos? ( ) Sim ( ) Não</p>
+                                <p>Uso de anticoagulantes? ( ) Sim ( ) Não</p>
+                                <p>Gestante ou lactante? ( ) Sim ( ) Não</p>
+                                <p>Hepatite ou HIV? ( ) Sim ( ) Não</p>
+                            </div>
+                        )}
+
+                        {printReason === 'Atualização Semestral' && (
+                            <div className="space-y-4 text-xs">
+                                <p className="italic">"Declaro que, desde minha última avaliação, não houve alterações significativas em meu quadro de saúde, exceto pelo que segue abaixo:"</p>
+                                <div className="space-y-2">
+                                    <p>Surgiu alguma nova alergia? ( ) Sim ( ) Não. Qual? ________________________</p>
+                                    <p>Iniciou algum novo medicamento? ( ) Sim ( ) Não. Qual? ________________________</p>
+                                    <p>Realizou alguma cirurgia recente? ( ) Sim ( ) Não</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {printReason === 'Revisão Pós-Tattoo' && (
+                            <div className="space-y-4 text-xs">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <p>Cicatrização completa? ( ) Sim ( ) Não</p>
+                                    <p>Houve falha na pigmentação? ( ) Sim ( ) Não</p>
+                                    <p>Sinais de inflamação? ( ) Sim ( ) Não</p>
+                                    <p>Seguiu os cuidados recomendados? ( ) Sim ( ) Não</p>
+                                </div>
+                                <div className="space-y-2">
+                                    <p><strong>Observações do Profissional:</strong> ____________________________________________________</p>
+                                    <p>______________________________________________________________________________</p>
+                                    <p><strong>Necessário Retoque?</strong> ( ) Sim ( ) Não. Data prevista: ___/___/___</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {printReason !== 'Revisão Pós-Tattoo' && (
+                            <div className="text-xs space-y-2">
+                                <p><strong>Medicamentos em uso:</strong> ____________________________________________________</p>
+                                <p><strong>Alergias conhecidas:</strong> ____________________________________________________</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Consent Text */}
                     <div className="space-y-3 text-[10px] text-justify leading-snug">
                         <h4 className="font-bold uppercase">Termo de Responsabilidade</h4>
-                        <p>Declaro estar ciente de todos os procedimentos aos quais serei submetido, bem como dos riscos inerentes (infecção, reações alérgicas ou má cicatrização). Comprometo-me a seguir todas as orientações pós-procedimento fornecidas pelo profissional. Isento o estúdio <strong>{studioName || ''}</strong> e o profissional de qualquer responsabilidade por omissão de informações sobre meu estado de saúde.</p>
-                        <p>Autorizo o uso de fotografias do procedimento para fins de divulgação em portfólio e redes sociais do estúdio <strong>{studioName || ''}</strong>.</p>
+                        {printReason === 'Revisão Pós-Tattoo' ? (
+                            <p>Declaro estar ciente da avaliação realizada nesta data. Comprometo-me a seguir eventuais novas orientações caso o retoque seja necessário. Reconheço que a cicatrização final depende diretamente dos cuidados aplicados.</p>
+                        ) : (
+                            <>
+                                <p>Declaro estar ciente de todos os procedimentos aos quais serei submetido, bem como dos riscos inerentes (infecção, reações alérgicas ou má cicatrização). Comprometo-me a seguir todas as orientações pós-procedimento fornecidas pelo profissional. Isento o estúdio <strong>{studioName || ''}</strong> e o profissional de qualquer responsabilidade por omissão de informações sobre meu estado de saúde.</p>
+                                <p>Autorizo o uso de fotografias do procedimento para fins de divulgação em portfólio e redes sociais do estúdio <strong>{studioName || ''}</strong>.</p>
+                            </>
+                        )}
                     </div>
 
                     {/* Signatures */}
@@ -216,7 +262,11 @@ export default function AnamnesisPage() {
                                 </div>
                                 <div>
                                     <label className="text-[12px] font-black text-gold-polished uppercase tracking-widest block mb-1.5">Motivo da Ficha</label>
-                                    <select className="w-full bg-zinc-900 border border-premium-border rounded-xl p-3 text-sm text-white focus:border-gold-polished transition-all outline-none">
+                                    <select 
+                                        value={printReason}
+                                        onChange={(e) => setPrintReason(e.target.value)}
+                                        className="w-full bg-zinc-900 border border-premium-border rounded-xl p-3 text-sm text-white focus:border-gold-polished transition-all outline-none"
+                                    >
                                         <option>Novo Procedimento</option>
                                         <option>Atualização Semestral</option>
                                         <option>Revisão Pós-Tattoo</option>

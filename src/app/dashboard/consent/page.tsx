@@ -88,25 +88,76 @@ export default function ConsentPage() {
 
                     {/* Term Content */}
                     <div className="space-y-6">
-                        <section className="space-y-2">
-                            <h3 className="font-bold uppercase text-sm">1. Natureza do Procedimento</h3>
-                            <p className="text-xs text-justify">Pelo presente instrumento, o(a) CLIENTE declara estar ciente de que o procedimento de tatuagem é de caráter definitivo e irreversível sem intervenções a laser, consistindo na introdução de pigmentos na derme por meio de agulhas estéreis.</p>
-                        </section>
+                        {newTerm.name === 'Consentimento Geral Tatuagem' && (
+                            <>
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">1. Natureza do Procedimento</h3>
+                                    <p className="text-xs text-justify">Pelo presente instrumento, o(a) CLIENTE declara estar ciente de que o procedimento de tatuagem é de caráter definitivo e irreversível sem intervenções a laser, consistindo na introdução de pigmentos na derme por meio de agulhas estéreis.</p>
+                                </section>
 
-                        <section className="space-y-2">
-                            <h3 className="font-bold uppercase text-sm">2. Riscos e Cicatrização</h3>
-                            <p className="text-xs text-justify">O(A) CLIENTE declara possuir plena consciência dos riscos inerentes ao procedimento, incluindo, mas não se limitando a: reações alérgicas aos pigmentos, processos inflamatórios, infecções caso os cuidados pós-tatuagem não sejam seguidos rigorosamente, e variações na pigmentação conforme o biotipo cutâneo.</p>
-                        </section>
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">2. Riscos e Cicatrização</h3>
+                                    <p className="text-xs text-justify">O(A) CLIENTE declara possuir plena consciência dos riscos inerentes ao procedimento, incluindo, mas não se limitando a: reações alérgicas aos pigmentos, processos inflamatórios, infecções caso os cuidados pós-tatuagem não sejam seguidos rigorosamente, e variações na pigmentação conforme o biotipo cutâneo.</p>
+                                </section>
 
-                        <section className="space-y-2">
-                            <h3 className="font-bold uppercase text-sm">3. Declaração de Saúde</h3>
-                            <p className="text-xs text-justify">O(A) CLIENTE afirma não ser portador(a) de doenças infectocontagiosas (Hepatite, HIV), não possuir histórico de reações anafiláticas graves e não estar sob efeito de álcool ou substâncias psicotrópicas no momento do atendimento.</p>
-                        </section>
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">3. Declaração de Saúde</h3>
+                                    <p className="text-xs text-justify">O(A) CLIENTE afirma não ser portador(a) de doenças infectocontagiosas (Hepatite, HIV), não possuir histórico de reações anafiláticas graves e não estar sob efeito de álcool ou substâncias psicotrópicas no momento do atendimento.</p>
+                                </section>
 
-                        <section className="space-y-2">
-                            <h3 className="font-bold uppercase text-sm">4. Uso de Imagem</h3>
-                            <p className="text-xs text-justify">Fica autorizado o uso de registros fotográficos e audiovisuais do procedimento e da arte finalizada para fins de divulgação em portfólios, redes sociais e material publicitário do estúdio <strong>{studioName || ''}</strong>.</p>
-                        </section>
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">4. Uso de Imagem</h3>
+                                    <p className="text-xs text-justify">Fica autorizado o uso de registros fotográficos e audiovisuais do procedimento e da arte finalizada para fins de divulgação em portfólios, redes sociais e material publicitário do estúdio <strong>{studioName || ''}</strong>.</p>
+                                </section>
+                            </>
+                        )}
+
+                        {newTerm.name === 'Uso de Imagem & Divulgação' && (
+                            <>
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">1. Autorização de Uso</h3>
+                                    <p className="text-xs text-justify">O(A) CLIENTE autoriza, de forma gratuita e definitiva, o estúdio <strong>{studioName || ''}</strong> e seus profissionais a utilizarem sua imagem (fotografias e vídeos) capturada durante e após o procedimento realizado.</p>
+                                </section>
+
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">2. Finalidade</h3>
+                                    <p className="text-xs text-justify">A utilização da imagem destina-se exclusivamente à divulgação do trabalho artístico em portfólios físicos, sites, redes sociais (Instagram, Facebook, etc.) e outros materiais de marketing do estúdio.</p>
+                                </section>
+
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">3. Irrevogabilidade</h3>
+                                    <p className="text-xs text-justify">A presente autorização é concedida sem qualquer ônus para o estúdio, sendo firmada em caráter irrevogável e irretratável, não cabendo qualquer indenização presente ou futura por direito de imagem.</p>
+                                </section>
+                            </>
+                        )}
+
+                        {newTerm.name === 'Pós-Procedimento Care' && (
+                            <>
+                                <section className="space-y-2 text-center border-y border-black py-4">
+                                    <h3 className="font-bold uppercase text-sm italic">GUIA DE CUIDADOS ESSENCIAIS</h3>
+                                    <p className="text-[10px]">A qualidade final da sua tatuagem depende 50% do artista e 50% dos seus cuidados.</p>
+                                </section>
+
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">1. Higienização</h3>
+                                    <p className="text-xs">Lavar 3 vezes ao dia com sabonete neutro ou antisséptico. Secar com papel toalha de forma suave (não esfregar).</p>
+                                </section>
+
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">2. Hidratação</h3>
+                                    <p className="text-xs">Aplicar uma camada fina da pomada recomendada após a secagem. Evitar excesso de produto para que a pele possa respirar.</p>
+                                </section>
+
+                                <section className="space-y-2">
+                                    <h3 className="font-bold uppercase text-sm">3. Proibições (Primeiros 15 dias)</h3>
+                                    <p className="text-xs">• Não remover casquinhas ou coçar. • Não expor ao sol direto ou bronzeamento. • Não frequentar mar, piscina, sauna ou banheiras.</p>
+                                </section>
+
+                                <section className="space-y-2">
+                                    <p className="text-[10px] text-justify pt-4 border-t border-dotted border-black">Declaro ter recebido as orientações verbais e este guia impresso, comprometendo-me a segui-las integralmente para garantir a integridade da arte e da minha saúde.</p>
+                                </section>
+                            </>
+                        )}
                     </div>
 
                     {/* Signatures */}
